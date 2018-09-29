@@ -5,6 +5,10 @@ import { BaseWebPartContext } from "@microsoft/sp-webpart-base";
 
 
 export class PnPSpGroupSvc implements ISpGroupSvc {
+    AddGroupMembers: (groupId: number, users: ISpUser[]) => Promise<void>;
+    RemoveGroupMembers: (groupId: number, usersToRemove: ISpUser[]) => Promise<void>;
+    GetAllGroupMembers: (groupId: number) => Promise<ISpGroup[]>;
+    DeleteGroup: (groupId: number) => Promise<void>;
 
 
     private readonly groupEndpoint =
@@ -57,10 +61,6 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
         //TODO check if this returns what you think it returns
         return result.data;
     }
-    // AddGroupMembers: (group: ISpGroup, users: ISpUser[]) => Promise<void>;
-    // RemoveGroupMembers: (group: ISpGroup, usersToRemove: ISpUser[]) => Promise<void>;
-    // GetAllGroupMembers: (group: ISpGroup) => Promise<ISpGroup[]>;
-    // AddGroup: (group: ISpGroup) => Promise<ISpGroup>;
-    // DeleteGroup: (group: ISpGroup) => Promise<void>;
+     
 
 }

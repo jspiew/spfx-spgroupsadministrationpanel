@@ -17,7 +17,7 @@ export interface ISpGroup {
     Description: string
     Id: number
     IsHiddenInUI: boolean
-    LoginName: "Grupa Fabryk dla KRajów A B i C"
+    LoginName: string
     OnlyAllowMembersViewMembership: boolean
     OwnerTitle: string //"Spiewak, Jacek"
     RequestToJoinLeaveEmailSetting: string
