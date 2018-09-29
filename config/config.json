@@ -1,0 +1,20 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "share-point-groups-admin-panel-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/sharePointGroupsAdminPanel/SharePointGroupsAdminPanelWebPart.js",
+          "manifest": "./src/webparts/sharePointGroupsAdminPanel/SharePointGroupsAdminPanelWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "SharePointGroupsAdminPanelWebPartStrings": "lib/webparts/sharePointGroupsAdminPanel/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js"
+  }
+}

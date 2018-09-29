@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "spfx-groupmanager-client-side-solution",
+    "id": "de8ec05d-e8a6-4e11-b8b2-fa29c1342d63",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true
+  },
+  "paths": {
+    "zippedPackage": "solution/spfx-groupmanager.sppkg"
+  }
+}
