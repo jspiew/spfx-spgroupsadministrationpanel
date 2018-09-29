@@ -47,6 +47,16 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
             changes
         );
     }
+
+    async AddGroup(group:ISpGroup) {
+        delete group.Id;
+        let result = await sp.web.siteGroups.add(
+            group
+        )
+
+        //TODO check if this returns what you think it returns
+        return result.data;
+    }
     // AddGroupMembers: (group: ISpGroup, users: ISpUser[]) => Promise<void>;
     // RemoveGroupMembers: (group: ISpGroup, usersToRemove: ISpUser[]) => Promise<void>;
     // GetAllGroupMembers: (group: ISpGroup) => Promise<ISpGroup[]>;
