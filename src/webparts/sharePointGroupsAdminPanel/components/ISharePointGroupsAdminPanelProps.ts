@@ -1,3 +1,5 @@
+import { ISpGroupSvc } from "../../../models";
+
 export interface ISharePointGroupsAdminPanelProps {
-  description: string;
+  groupsSvc: ISpGroupSvc;
 }

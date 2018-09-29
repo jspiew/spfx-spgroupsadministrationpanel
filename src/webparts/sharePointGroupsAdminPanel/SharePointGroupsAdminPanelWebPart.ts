@@ -10,6 +10,7 @@ import {
 import * as strings from 'SharePointGroupsAdminPanelWebPartStrings';
 import SharePointGroupsAdminPanel from './components/SharePointGroupsAdminPanel';
 import { ISharePointGroupsAdminPanelProps } from './components/ISharePointGroupsAdminPanelProps';
+import { PnPSpGroupSvc } from '../../services/spGroupSvc';
 
 export interface ISharePointGroupsAdminPanelWebPartProps {
   description: string;
@@ -21,7 +22,7 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
     const element: React.ReactElement<ISharePointGroupsAdminPanelProps > = React.createElement(
       SharePointGroupsAdminPanel,
       {
-        description: this.properties.description
+        groupsSvc: new PnPSpGroupSvc(this.context)
       }
     );
 

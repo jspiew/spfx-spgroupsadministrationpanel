@@ -13,13 +13,13 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
 
     private readonly groupEndpoint =
         {
-            expandables: ["Owners", "Users"],
+            expandables: ["Owner", "Users"],
             selectables: [
                 "Owner/Email",
                 "Owner/Id",
                 "Owner/Title",
                 "Users/Email",
-                "Users/Email",
+                "Users/Title",
                 "Users/Id",
                 "AllowMembersEditMembership",
                 "AllowRequestToJoinLeave",
