@@ -29,17 +29,19 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             fieldName: "Title",
             minWidth: 100,
             key: "title",
-            name: "Title"            
+            name: "Title"    ,
+            isResizable: true,        
         },
         {
             fieldName: "Description",
             minWidth: 100,
             key: "description",
-            name: "Description"
+            name: "Description",
+            isResizable: true,
         },
         {
             fieldName: "Owner",
-            minWidth: 400,
+            minWidth: 200,
             key: "owner",
             name: "Owner",
             onRender: (item: ISpGroup,index,column) => {
@@ -52,43 +54,55 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                             return <a href={item.Owner.Email}>{item.Owner.Email}</a>
                         }} />
                 )
-            }
+            },
+            isResizable: true,
         },
         {
             fieldName: "Users",
-            minWidth: 400,
+            minWidth: 200,
+            isResizable: true,
             key: "users",
-            name: "Users",
+            name: "Members",
             onRender: (item: ISpGroup, index, column) => {
                 return (
-
-                    <div>
-                        {item.Users.map(u => {return (
-                            <div>
-                                <HoverCard
-                                    expandingCardProps = {{
-                                        onRenderCompactCard: (props) => {
-                                            return (
-                                                <div>{props.renderData.Email}</div>
-                                            )
-                                        },
-                                        onRenderExpandedCard: (props) => {
-                                            return (
-                                                <div>{props.renderData.Email}</div>
-                                            )
-                                        },
-                                        renderData: u
-                                    }}instantOpenOnClick = {true}>
-                                    <Persona
-                                        size={PersonaSize.small}
-                                        imageUrl={`https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${u.Email}&UA=0&size=HR64x64`} />
-                                </HoverCard>
-                            </div>
-                        )})}
-                    </div>
+                    <Facepile
+                        personas={item.Users.slice(0, 10).map<IFacepilePersona>(u => {
+                            return { 
+                                imageUrl: `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${u.Email}&UA=0&size=HR64x64`,
+                                personaName: u.Title
+                            }
+                        })}
+                        overflowPersonas={item.Users.slice(10).map<IFacepilePersona>(u => {
+                            return {
+                                imageUrl: `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${u.Email}&UA=0&size=HR64x64`,
+                                personaName: u.Title
+                            }
+                        })}
+                    />
                 )
-            }
-        }
+            },
+        },
+        {
+            fieldName: "OnlyAllowMembersViewMembership",
+            minWidth: 100,
+            key: "OnlyAllowMembersViewMembership",
+            name: "View members right",
+            isResizable: true,
+        },
+        {
+            fieldName: "AllowMembersEditMembership",
+            minWidth: 100,
+            key: "AllowMembersEditMembership",
+            name: "Allow Members Edit Membership",
+            isResizable: true,
+        },
+        {
+            fieldName: "RequestToJoinLeaveEmailSetting",
+            minWidth: 100,
+            key: "RequestToJoinLeaveEmailSetting",
+            name: "Requests email",
+            isResizable: true,
+        },
     ]
 
     constructor(props) {
@@ -97,7 +111,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
 
     public render(): React.ReactElement<IGroupsListProps> {
         return (
-            <div>
+            <div className={styles.groupsList}>
                 <DetailsList
                     items={this.props.groups}
                     columns = {this._columns}
