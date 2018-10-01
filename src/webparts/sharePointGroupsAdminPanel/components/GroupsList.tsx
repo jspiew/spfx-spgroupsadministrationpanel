@@ -6,6 +6,7 @@ import {
 import { ISpGroup } from '../../../models';
 import {SpUserPersona, SpUsersFacepile} from "./small/userDisplays"
 import UsersPanel from "./UsersPanel"
+import { SPHttpClient } from '@microsoft/sp-http';
 
 export interface IGroupsListState {
     openGroup: ISpGroup,
@@ -13,7 +14,9 @@ export interface IGroupsListState {
 }
 
 export interface IGroupsListProps {
-    groups: Array<ISpGroup>
+    groups: Array<ISpGroup>,
+    spHttpClient: SPHttpClient,
+    webAbsoluteUrl: string
 }
 
 export default class GroupsList extends React.Component<IGroupsListProps, IGroupsListState> {
@@ -107,6 +110,8 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                     groupTitle = {openGroup == null ? "Undefined" : openGroup.Title}
                     isOpen={this.state.isGroupEditPanelOpen}
                     users = {openGroup == null ? [] : openGroup.Users}
+                    spHttpClient = {this.props.spHttpClient}
+                    webAbsoluteUrl = {this.props.webAbsoluteUrl}
                 />
             </div>
         );

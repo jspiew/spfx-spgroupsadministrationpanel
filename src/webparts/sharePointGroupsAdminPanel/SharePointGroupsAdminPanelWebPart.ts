@@ -22,7 +22,9 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
     const element: React.ReactElement<ISharePointGroupsAdminPanelProps > = React.createElement(
       SharePointGroupsAdminPanel,
       {
-        groupsSvc: new PnPSpGroupSvc(this.context)
+        groupsSvc: new PnPSpGroupSvc(this.context),
+        spHttpClient: this.context.spHttpClient,
+        webAbsoluteUrl: this.context.pageContext.web.absoluteUrl
       }
     );
 
