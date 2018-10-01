@@ -5,9 +5,11 @@ import {
     IColumn} from 'office-ui-fabric-react/lib/DetailsList';
 import { ISpGroup } from '../../../models';
 import {SpUserPersona, SpUsersFacepile} from "./small/userDisplays"
+import UsersPanel from "./UsersPanel"
 
 export interface IGroupsListState {
-    
+    openGroup: ISpGroup,
+    isGroupEditPanelOpen: boolean
 }
 
 export interface IGroupsListProps {
@@ -51,7 +53,14 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             name: "Members",
             onRender: (item: ISpGroup) => {
                 return (
-                    <SpUsersFacepile users={item.Users} />
+                    <a href='#' onClick = {()=>{
+                        this.setState({
+                            openGroup: item,
+                            isGroupEditPanelOpen: true
+                        })
+                    }}>
+                        Edit users
+                    </a>
                 )
             },
         },
@@ -78,16 +87,26 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         }
     ]
 
-    constructor(props) {
+    constructor(props: IGroupsListProps) {
         super(props)
+        this.state = {
+            openGroup: null,
+            isGroupEditPanelOpen: false
+        }
     }
 
     public render(): React.ReactElement<IGroupsListProps> {
+        let openGroup = this.state.openGroup;
         return (
             <div className={styles.groupsList}>
                 <DetailsList
                     items={this.props.groups}
                     columns = {this._columns}
+                />
+                <UsersPanel 
+                    groupTitle = {openGroup == null ? "Undefined" : openGroup.Title}
+                    isOpen={this.state.isGroupEditPanelOpen}
+                    users = {openGroup == null ? [] : openGroup.Users}
                 />
             </div>
         );
