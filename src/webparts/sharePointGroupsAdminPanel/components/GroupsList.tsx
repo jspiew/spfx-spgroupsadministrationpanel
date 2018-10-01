@@ -1,18 +1,10 @@
 import * as React from 'react';
 import styles from './GroupsList.module.scss';
-import { escape } from '@microsoft/sp-lodash-subset';
 import {
     DetailsList,
-    DetailsListLayoutMode,
-    Selection,
-    IColumn,
-    IDetailsList
-} from 'office-ui-fabric-react/lib/DetailsList';
-import { IPersonaSharedProps, Persona, PersonaSize } from 'office-ui-fabric-react/lib/Persona';
-import { IFacepileProps, Facepile, OverflowButtonType, IFacepilePersona } from 'office-ui-fabric-react/lib/Facepile';
-import { ISpGroup, ISpUser } from '../../../models';
-import { autobind } from '@uifabric/utilities/lib';
-import { HoverCard, IExpandingCardProps } from 'office-ui-fabric-react/lib/HoverCard';
+    IColumn} from 'office-ui-fabric-react/lib/DetailsList';
+import { ISpGroup } from '../../../models';
+import {SpUserPersona, SpUsersFacepile} from "./small/userDisplays"
 
 export interface IGroupsListState {
     
@@ -44,15 +36,9 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             minWidth: 200,
             key: "owner",
             name: "Owner",
-            onRender: (item: ISpGroup,index,column) => {
+            onRender: (item: ISpGroup) => {
                 return (
-                    <Persona 
-                        primaryText= {item.Owner.Title}
-                        size = {PersonaSize.small}
-                        imageUrl={`https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${item.Owner.Email}&UA=0&size=HR64x64`} 
-                        onRenderSecondaryText = {() => {
-                            return <a href={item.Owner.Email}>{item.Owner.Email}</a>
-                        }} />
+                    <SpUserPersona user = {item.Owner} />
                 )
             },
             isResizable: true,
@@ -63,22 +49,9 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             isResizable: true,
             key: "users",
             name: "Members",
-            onRender: (item: ISpGroup, index, column) => {
+            onRender: (item: ISpGroup) => {
                 return (
-                    <Facepile
-                        personas={item.Users.slice(0, 10).map<IFacepilePersona>(u => {
-                            return { 
-                                imageUrl: `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${u.Email}&UA=0&size=HR64x64`,
-                                personaName: u.Title
-                            }
-                        })}
-                        overflowPersonas={item.Users.slice(10).map<IFacepilePersona>(u => {
-                            return {
-                                imageUrl: `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${u.Email}&UA=0&size=HR64x64`,
-                                personaName: u.Title
-                            }
-                        })}
-                    />
+                    <SpUsersFacepile users={item.Users} />
                 )
             },
         },
@@ -102,7 +75,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             key: "RequestToJoinLeaveEmailSetting",
             name: "Requests email",
             isResizable: true,
-        },
+        }
     ]
 
     constructor(props) {
@@ -120,5 +93,5 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         );
     }
 
-    private _onRenderCompactCard
+
 }
