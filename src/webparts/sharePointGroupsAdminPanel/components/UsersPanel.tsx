@@ -31,7 +31,6 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                     titleText="People Picker"
                     personSelectionLimit={1}
                     showtooltip={true}
-                    isRequired={true}
                     selectedItems={this._getPeoplePickerItems}
                     showHiddenInUI={false}
                     principleTypes={[PrincipalType.User, PrincipalType.SecurityGroup]}
