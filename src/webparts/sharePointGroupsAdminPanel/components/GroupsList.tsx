@@ -7,6 +7,8 @@ import { ISpGroup } from '../../../models';
 import {SpUserPersona, SpUsersFacepile} from "./small/userDisplays"
 import UsersPanel from "./UsersPanel"
 import { SPHttpClient } from '@microsoft/sp-http';
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
+import {AbbrToggle} from "./small/abbrToggle"
 
 export interface IGroupsListState {
     openGroup: ISpGroup,
@@ -50,7 +52,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         },
         {
             fieldName: "Users",
-            minWidth: 200,
+            minWidth: 80,
             isResizable: true,
             key: "users",
             name: "Members",
@@ -73,6 +75,16 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             key: "OnlyAllowMembersViewMembership",
             name: "View members right",
             isResizable: true,
+            onRender: (item:ISpGroup) => {
+                return (
+                    <AbbrToggle 
+                        offAbbrText= "Anyone with site access can view group members"
+                        onAbbrText= "Only group members can view other members"
+                        defaultValue = {item.OnlyAllowMembersViewMembership}
+                        onChanged = {() => {}}
+                    />
+                )
+            }
         },
         {
             fieldName: "AllowMembersEditMembership",
@@ -80,6 +92,16 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             key: "AllowMembersEditMembership",
             name: "Allow Members Edit Membership",
             isResizable: true,
+            onRender: (item: ISpGroup) => {
+                return (
+                    <AbbrToggle
+                        offAbbrText="Only group owner can edit members"
+                        onAbbrText="Members can edit other group members"
+                        defaultValue={item.OnlyAllowMembersViewMembership}
+                        onChanged={() => { }}
+                    />
+                )
+            }
         },
         {
             fieldName: "RequestToJoinLeaveEmailSetting",
