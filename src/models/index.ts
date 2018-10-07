@@ -10,6 +10,10 @@ export interface ISpGroupSvc {
     DeleteGroup: (groupId: number) => Promise<void>
 }
 
+export interface IUsersSvc {
+    GetUsersSuggestions: (searchText: string) => Promise<Array<IGraphUser>>
+}
+
 export interface ISpGroup {
     AllowMembersEditMembership: boolean
     AllowRequestToJoinLeave: boolean
@@ -30,6 +34,12 @@ export interface ISpUser {
     Title: string,
     Id: number,
     Email: string
+}
+
+export interface IGraphUser {
+    Email:string,
+    Title: string,
+    PhotoUrl: string
 }
 
 

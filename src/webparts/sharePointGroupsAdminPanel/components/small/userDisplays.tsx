@@ -12,7 +12,7 @@ export function SpUserPersona(props:{user: ISpUser}){
     return (
         <Persona
             className = {styles.spUserPersona}
-            primaryText={props.user.Title}
+            text={props.user.Title}
             size={PersonaSize.small}
             imageUrl={_getTHumbnailUrl(props.user.Email)}
             onRenderSecondaryText={() => {
