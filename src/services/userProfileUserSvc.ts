@@ -25,7 +25,7 @@ export class UserProfileUserSvc implements IUsersSvc {
         return results.map<IUserSuggestion>(r => {
             return {
                 Email: r.EntityData.Email,
-                Title: r.EntityData.Title
+                Title: r.DisplayText
             }
         })
     }

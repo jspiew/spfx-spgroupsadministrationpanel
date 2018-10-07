@@ -9,6 +9,7 @@ import {
 import { IUserSuggestion, IUsersSvc } from "../models/index"
 import * as React from 'react';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
+import { autobind } from '@uifabric/utilities/lib';
 export interface IPeoplePickerState {
     peopleList: IPersonaProps[];
     mostRecentlyUsed: IPersonaProps[];
@@ -44,22 +45,20 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
                 onValidateInput={this._validateInput}
                 resolveDelay={300}
                 onInputChange={this._onInputChange}
-                onChange = {(items) => {this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text}}))}}
+                onChange = {(items) => {this._onItemsChange(items); this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text}}))}}
             />
         )
     }
 
-    private _onItemsChange = (items: any[]): void => {
+    @autobind
+    private _onItemsChange(items: any[]){
         this.setState({
             currentSelectedItems: items
         });
     };
 
-    private _renderFooterText = (): JSX.Element => {
-        return <div>No additional results</div>;
-    };
-
-    private _onRemoveSuggestion = (item: IPersonaProps): void => {
+    @autobind
+    private _onRemoveSuggestion (item: IPersonaProps) {
         const { peopleList, mostRecentlyUsed: mruState } = this.state;
         const indexPeopleList: number = peopleList.indexOf(item);
         const indexMostRecentlyUsed: number = mruState.indexOf(item);
@@ -78,7 +77,8 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
             this.setState({ mostRecentlyUsed: newSuggestedPeople });
         }
     };
-
+    
+    @autobind
     private async _onFilterChanged(
         filterText: string,
         currentPersonas: IPersonaProps[],
@@ -100,8 +100,9 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
             return [];
         }
     };
-
-    private _returnMostRecentlyUsed = (currentPersonas: IPersonaProps[]): IPersonaProps[] | Promise<IPersonaProps[]> => {
+    
+    @autobind
+    private _returnMostRecentlyUsed(currentPersonas: IPersonaProps[]) {
         let { mostRecentlyUsed } = this.state;
         mostRecentlyUsed = this._removeDuplicates(mostRecentlyUsed, currentPersonas);
         return this._filterPromise(mostRecentlyUsed);
@@ -120,7 +121,7 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
         return personas.filter(item => item.text === persona.text).length > 0;
     }
 
-
+    @autobind
     private _removeDuplicates(personas: IPersonaProps[], possibleDupes: IPersonaProps[]) {
         return personas.filter(persona => !this._listContainsPersona(persona, possibleDupes));
     }
