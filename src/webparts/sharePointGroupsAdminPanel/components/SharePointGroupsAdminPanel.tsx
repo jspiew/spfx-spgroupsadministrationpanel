@@ -14,6 +14,7 @@ import { ISpGroup, ISpUser } from '../../../models';
 import { autobind } from '@uifabric/utilities/lib';
 import { spGroupAdminPanelViewType } from '../SharePointGroupsAdminPanelWebPart';
 import {Spinner} from "office-ui-fabric-react/lib/Spinner"
+import GroupsDetailsView from "./GroupsDetailsView"
 
 export interface ISharePointGroupsAdminPanelState {
   groups: Array<ISpGroup>
@@ -41,12 +42,11 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
 
     switch(this.props.viewType) {
       case spGroupAdminPanelViewType.Details: 
-        groupDisplay = <GroupList
+        groupDisplay = <GroupsDetailsView
           groups={this.state.groups}
           spHttpClient={this.props.spHttpClient}
           webAbsoluteUrl={this.props.webAbsoluteUrl}
           updateGroup={this.props.groupsSvc.UpdateGroup}
-          extendedView= {false}
         />
         break;
       case spGroupAdminPanelViewType.ExtendedList:

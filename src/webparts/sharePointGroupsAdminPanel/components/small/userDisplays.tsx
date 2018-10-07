@@ -2,6 +2,7 @@ import {ISpUser} from "../../../../models/index"
 import { IPersonaSharedProps, Persona, PersonaSize } from 'office-ui-fabric-react/lib/Persona';
 import * as React from "react"
 import { IFacepileProps, Facepile, OverflowButtonType, IFacepilePersona } from 'office-ui-fabric-react/lib/Facepile';
+import styles from "./smallComponents.module.scss"
 
 function _getTHumbnailUrl(email:string){
     return `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${email}&UA=0&size=HR64x64`
@@ -10,6 +11,7 @@ function _getTHumbnailUrl(email:string){
 export function SpUserPersona(props:{user: ISpUser}){
     return (
         <Persona
+            className = {styles.spUserPersona}
             primaryText={props.user.Title}
             size={PersonaSize.small}
             imageUrl={_getTHumbnailUrl(props.user.Email)}
