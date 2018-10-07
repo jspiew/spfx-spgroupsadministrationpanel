@@ -18,6 +18,7 @@ export interface IGroupsListState {
 }
 
 export interface IGroupsListProps {
+    extendedView? : boolean,
     groups: Array<ISpGroup>,
     spHttpClient: SPHttpClient,
     webAbsoluteUrl: string,
@@ -26,7 +27,7 @@ export interface IGroupsListProps {
 
 export default class GroupsList extends React.Component<IGroupsListProps, IGroupsListState> {
 
-    private readonly _columns: Array<IColumn> = [
+    private readonly _basicColumns: Array<IColumn> = [
         {
             fieldName: "Title",
             minWidth: 100,
@@ -71,7 +72,10 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                     </a>
                 )
             },
-        },
+        }
+    ]
+
+    private readonly _extendedColumns = [
         {
             fieldName: "OnlyAllowMembersViewMembership",
             minWidth: 100,
@@ -137,7 +141,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             <div className={styles.groupsList}>
                 <DetailsList
                     items={this.props.groups}
-                    columns = {this._columns}
+                    columns = {this.props.extendedView ? [...this._basicColumns,...this._extendedColumns] : this._basicColumns}
                 />
                 <UsersPanel 
                     groupTitle = {openGroup == null ? "Undefined" : openGroup.Title}
