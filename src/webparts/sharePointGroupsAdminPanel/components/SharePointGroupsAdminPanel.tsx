@@ -52,19 +52,17 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
       case spGroupAdminPanelViewType.ExtendedList:
         groupDisplay = <GroupList
           groups={this.state.groups}
-          spHttpClient={this.props.spHttpClient}
-          webAbsoluteUrl={this.props.webAbsoluteUrl}
           updateGroup={this.props.groupsSvc.UpdateGroup}
           extendedView={true}
+          usersSvc = {this.props.usersSvc}
         />
         break;
       default:
         groupDisplay = <GroupList
           groups={this.state.groups}
-          spHttpClient={this.props.spHttpClient}
-          webAbsoluteUrl={this.props.webAbsoluteUrl}
           updateGroup={this.props.groupsSvc.UpdateGroup}
           extendedView={false}
+          usersSvc={this.props.usersSvc}
         />
         break;
     }

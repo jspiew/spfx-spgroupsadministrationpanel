@@ -11,7 +11,7 @@ export interface ISpGroupSvc {
 }
 
 export interface IUsersSvc {
-    GetUsersSuggestions: (searchText: string) => Promise<Array<IGraphUser>>
+    GetUsersSuggestions: (searchText: string) => Promise<Array<IUserSuggestion>>
 }
 
 export interface ISpGroup {
@@ -30,16 +30,13 @@ export interface ISpGroup {
     Users: Array<ISpUser>
 }
 
-export interface ISpUser {
-    Title: string,
-    Id: number,
-    Email: string
+export interface ISpUser extends IUserSuggestion {
+    Id: number
 }
 
-export interface IGraphUser {
+export interface IUserSuggestion {
     Email:string,
-    Title: string,
-    PhotoUrl: string
+    Title: string
 }
 
 

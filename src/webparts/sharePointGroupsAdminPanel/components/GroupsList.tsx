@@ -3,7 +3,7 @@ import styles from './GroupsList.module.scss';
 import {
     DetailsList,
     IColumn} from 'office-ui-fabric-react/lib/DetailsList';
-import { ISpGroup } from '../../../models';
+import { ISpGroup, IUsersSvc } from '../../../models';
 import {SpUserPersona, SpUsersFacepile} from "./small/userDisplays"
 import UsersPanel from "./UsersPanel"
 import { SPHttpClient } from '@microsoft/sp-http';
@@ -20,8 +20,7 @@ export interface IGroupsListState {
 export interface IGroupsListProps {
     extendedView? : boolean,
     groups: Array<ISpGroup>,
-    spHttpClient: SPHttpClient,
-    webAbsoluteUrl: string,
+    usersSvc: IUsersSvc,
     updateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<any>
 }
 
@@ -148,8 +147,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                     groupTitle = {openGroup == null ? "Undefined" : openGroup.Title}
                     isOpen={this.state.isGroupEditPanelOpen}
                     users = {openGroup == null ? [] : openGroup.Users}
-                    spHttpClient = {this.props.spHttpClient}
-                    webAbsoluteUrl = {this.props.webAbsoluteUrl}
+                    usersSvc = {this.props.usersSvc}
                 />
             </div>
         );

@@ -12,6 +12,7 @@ import * as strings from 'SharePointGroupsAdminPanelWebPartStrings';
 import SharePointGroupsAdminPanel from './components/SharePointGroupsAdminPanel';
 import { ISharePointGroupsAdminPanelProps } from './components/ISharePointGroupsAdminPanelProps';
 import { PnPSpGroupSvc } from '../../services/spGroupSvc';
+import { UserProfileUserSvc } from '../../services/userProfileUserSvc';
 
 
 export enum spGroupAdminPanelViewType {
@@ -34,7 +35,8 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
         groupsSvc: new PnPSpGroupSvc(this.context),
         spHttpClient: this.context.spHttpClient,
         webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
-        viewType : this.properties.viewType
+        viewType : this.properties.viewType,
+        usersSvc: new UserProfileUserSvc(this.context)
       } as ISharePointGroupsAdminPanelProps
     );
     ReactDom.render(webPartComponent, this.domElement);

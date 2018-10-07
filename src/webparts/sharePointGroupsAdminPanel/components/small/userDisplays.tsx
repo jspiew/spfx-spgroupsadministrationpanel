@@ -1,4 +1,4 @@
-import {ISpUser} from "../../../../models/index"
+import {ISpUser, IUserSuggestion} from "../../../../models/index"
 import { IPersonaSharedProps, Persona, PersonaSize } from 'office-ui-fabric-react/lib/Persona';
 import * as React from "react"
 import { IFacepileProps, Facepile, OverflowButtonType, IFacepilePersona } from 'office-ui-fabric-react/lib/Facepile';
@@ -8,7 +8,7 @@ function _getTHumbnailUrl(email:string){
     return `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${email}&UA=0&size=HR64x64`
 }
 
-export function SpUserPersona(props:{user: ISpUser}){
+export function SpUserPersona(props: { user: IUserSuggestion}){
     return (
         <Persona
             className = {styles.spUserPersona}
