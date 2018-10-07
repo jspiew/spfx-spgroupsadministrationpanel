@@ -1,7 +1,14 @@
 .groupsDetailsView{
     .peopleAddIcon {
         cursor: pointer;
-        font-weight: 700
+        font-weight: 600;
+        font-size: 23px;
+        margin-left: 4px;
+
+        &:hover {
+            color: "[theme: themePrimary, default: #0078d7]";
+            transition: 500ms 
+        }
     }
 
     .groupTitle {
