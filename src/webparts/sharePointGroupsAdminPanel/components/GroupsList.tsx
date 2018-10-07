@@ -9,16 +9,19 @@ import UsersPanel from "./UsersPanel"
 import { SPHttpClient } from '@microsoft/sp-http';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import {AbbrToggle} from "./small/abbrToggle"
+import { Draft } from '../../../utils/draft';
+import { Dialog } from '@microsoft/sp-dialog/lib/index';
 
 export interface IGroupsListState {
     openGroup: ISpGroup,
-    isGroupEditPanelOpen: boolean
+    isGroupEditPanelOpen: boolean   
 }
 
 export interface IGroupsListProps {
     groups: Array<ISpGroup>,
     spHttpClient: SPHttpClient,
-    webAbsoluteUrl: string
+    webAbsoluteUrl: string,
+    updateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<any>
 }
 
 export default class GroupsList extends React.Component<IGroupsListProps, IGroupsListState> {
@@ -81,7 +84,11 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                         offAbbrText= "Anyone with site access can view group members"
                         onAbbrText= "Only group members can view other members"
                         defaultValue = {item.OnlyAllowMembersViewMembership}
-                        onChanged = {() => {}}
+                        onChanged = {(checked) => {
+                            this.props.updateGroup(item.Id, {OnlyAllowMembersViewMembership : checked}).catch(() =>{
+                                Dialog.alert(`There was an error while updating the "View members right" property of the "${item.Title}" group.`)
+                            })
+                        }}
                     />
                 )
             }
@@ -98,7 +105,11 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                         offAbbrText="Only group owner can edit members"
                         onAbbrText="Members can edit other group members"
                         defaultValue={item.OnlyAllowMembersViewMembership}
-                        onChanged={() => { }}
+                        onChanged={(checked) => {
+                            this.props.updateGroup(item.Id, { AllowMembersEditMembership: checked }).catch(() => {
+                                Dialog.alert(`There was an error while updating the "Allow Members Edit Membership" property of the "${item.Title}" group.`)
+                            })
+                        }}
                     />
                 )
             }
