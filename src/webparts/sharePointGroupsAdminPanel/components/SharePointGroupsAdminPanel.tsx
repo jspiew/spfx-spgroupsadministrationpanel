@@ -12,6 +12,8 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { ISpGroup, ISpUser } from '../../../models';
 import { autobind } from '@uifabric/utilities/lib';
+import { spGroupAdminPanelViewType } from '../SharePointGroupsAdminPanelWebPart';
+import {Spinner} from "office-ui-fabric-react/lib/Spinner"
 
 export interface ISharePointGroupsAdminPanelState {
   groups: Array<ISpGroup>
@@ -35,17 +37,43 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
   }
 
   public render(): React.ReactElement<ISharePointGroupsAdminPanelProps> {
+    let groupDisplay: JSX.Element = null;
+
+    switch(this.props.viewType) {
+      case spGroupAdminPanelViewType.Details: 
+        groupDisplay = <GroupList
+          groups={this.state.groups}
+          spHttpClient={this.props.spHttpClient}
+          webAbsoluteUrl={this.props.webAbsoluteUrl}
+          updateGroup={this.props.groupsSvc.UpdateGroup}
+          extendedView= {false}
+        />
+        break;
+      case spGroupAdminPanelViewType.ExtendedList:
+        groupDisplay = <GroupList
+          groups={this.state.groups}
+          spHttpClient={this.props.spHttpClient}
+          webAbsoluteUrl={this.props.webAbsoluteUrl}
+          updateGroup={this.props.groupsSvc.UpdateGroup}
+          extendedView={true}
+        />
+        break;
+      default:
+        groupDisplay = <GroupList
+          groups={this.state.groups}
+          spHttpClient={this.props.spHttpClient}
+          webAbsoluteUrl={this.props.webAbsoluteUrl}
+          updateGroup={this.props.groupsSvc.UpdateGroup}
+          extendedView={false}
+        />
+        break;
+    }
+
     return (
       <div className={ styles.sharePointGroupsAdminPanel }>
-      {this.state.areGroupsLoading && "LOADING"}
+      {this.state.areGroupsLoading && <Spinner label="Loading groups"/>}
       { this.state.groups && 
-        <GroupList 
-          groups = {this.state.groups}
-          spHttpClient = {this.props.spHttpClient}
-          webAbsoluteUrl = {this.props.webAbsoluteUrl}
-          updateGroup = {this.props.groupsSvc.UpdateGroup}
-          extendedView = {this.props.extendedView}
-        />
+        groupDisplay
       }
       </div>
     );

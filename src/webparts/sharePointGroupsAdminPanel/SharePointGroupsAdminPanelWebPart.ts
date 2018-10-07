@@ -28,43 +28,15 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
 
   public render(): void {
 
-    let webPartComponent: React.ReactElement<any>;
-    switch (this.properties.viewType) {
-      case spGroupAdminPanelViewType.Details: 
-        webPartComponent =  React.createElement(
-          SharePointGroupsAdminPanel,
-          {
-            groupsSvc: new PnPSpGroupSvc(this.context),
-            spHttpClient: this.context.spHttpClient,
-            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
-            extendedView: false
-          } as ISharePointGroupsAdminPanelProps
-        );
-        break;
-      case spGroupAdminPanelViewType.ExtendedList:
-        webPartComponent = React.createElement(
-          SharePointGroupsAdminPanel,
-          {
-            groupsSvc: new PnPSpGroupSvc(this.context),
-            spHttpClient: this.context.spHttpClient,
-            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
-            extendedView: true
-          } as ISharePointGroupsAdminPanelProps
-        );
-        break;
-      default: //SimpleList is taken care of in this branch
-        webPartComponent = React.createElement(
-          SharePointGroupsAdminPanel,
-          {
-            groupsSvc: new PnPSpGroupSvc(this.context),
-            spHttpClient: this.context.spHttpClient,
-            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
-            extendedView: false
-          } as ISharePointGroupsAdminPanelProps
-        );
-        break;
-    }
-
+    const webPartComponent: React.ReactElement<ISharePointGroupsAdminPanelProps> = React.createElement(
+      SharePointGroupsAdminPanel,
+      {
+        groupsSvc: new PnPSpGroupSvc(this.context),
+        spHttpClient: this.context.spHttpClient,
+        webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
+        viewType : this.properties.viewType
+      } as ISharePointGroupsAdminPanelProps
+    );
     ReactDom.render(webPartComponent, this.domElement);
     
   }
