@@ -90,7 +90,7 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
               groupFields: [
                 PropertyPaneDropdown('viewType', {
                   label: "Display type",
-                  selectedKey : this.properties.viewType || spGroupAdminPanelViewType.SimpleList,
+                  selectedKey : this.properties.viewType,
                   options : [
                     {
                       key : spGroupAdminPanelViewType.SimpleList,
