@@ -4,7 +4,8 @@ import { Version } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneDropdown
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'SharePointGroupsAdminPanelWebPartStrings';
@@ -12,23 +13,60 @@ import SharePointGroupsAdminPanel from './components/SharePointGroupsAdminPanel'
 import { ISharePointGroupsAdminPanelProps } from './components/ISharePointGroupsAdminPanelProps';
 import { PnPSpGroupSvc } from '../../services/spGroupSvc';
 
+
+export enum spGroupAdminPanelViewType {
+  Details,
+  SimpleList,
+  ExtendedList
+}
+
 export interface ISharePointGroupsAdminPanelWebPartProps {
-  description: string;
+  viewType: spGroupAdminPanelViewType
 }
 
 export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWebPart<ISharePointGroupsAdminPanelWebPartProps> {
 
   public render(): void {
-    const element: React.ReactElement<ISharePointGroupsAdminPanelProps > = React.createElement(
-      SharePointGroupsAdminPanel,
-      {
-        groupsSvc: new PnPSpGroupSvc(this.context),
-        spHttpClient: this.context.spHttpClient,
-        webAbsoluteUrl: this.context.pageContext.web.absoluteUrl
-      }
-    );
 
-    ReactDom.render(element, this.domElement);
+    let webPartComponent: React.ReactElement<any>;
+    switch (this.properties.viewType) {
+      case spGroupAdminPanelViewType.Details: 
+        webPartComponent =  React.createElement(
+          SharePointGroupsAdminPanel,
+          {
+            groupsSvc: new PnPSpGroupSvc(this.context),
+            spHttpClient: this.context.spHttpClient,
+            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
+            extendedView: false
+          } as ISharePointGroupsAdminPanelProps
+        );
+        break;
+      case spGroupAdminPanelViewType.ExtendedList:
+        webPartComponent = React.createElement(
+          SharePointGroupsAdminPanel,
+          {
+            groupsSvc: new PnPSpGroupSvc(this.context),
+            spHttpClient: this.context.spHttpClient,
+            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
+            extendedView: true
+          } as ISharePointGroupsAdminPanelProps
+        );
+        break;
+      default: //SimpleList is taken care of in this branch
+        webPartComponent = React.createElement(
+          SharePointGroupsAdminPanel,
+          {
+            groupsSvc: new PnPSpGroupSvc(this.context),
+            spHttpClient: this.context.spHttpClient,
+            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
+            extendedView: false
+          } as ISharePointGroupsAdminPanelProps
+        );
+        break;
+    }
+
+    ReactDom.render(webPartComponent, this.domElement);
+    
   }
 
   protected onDispose(): void {
@@ -44,14 +82,29 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
       pages: [
         {
           header: {
-            description: strings.PropertyPaneDescription
+            description: "WebPart configuration"
           },
           groups: [
             {
-              groupName: strings.BasicGroupName,
+              groupName: "Display",
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                PropertyPaneDropdown('viewType', {
+                  label: "Display type",
+                  selectedKey : this.properties.viewType,
+                  options : [
+                    {
+                      key : spGroupAdminPanelViewType.SimpleList,
+                      text : "Standard list"
+                    },
+                    {
+                      key: spGroupAdminPanelViewType.ExtendedList,
+                      text: "Extended list"
+                    },
+                    {
+                      key: spGroupAdminPanelViewType.Details,
+                      text: "Details"
+                    }
+                  ]
                 })
               ]
             }

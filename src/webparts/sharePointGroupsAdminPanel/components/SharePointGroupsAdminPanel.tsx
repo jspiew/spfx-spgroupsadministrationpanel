@@ -43,6 +43,8 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
           groups = {this.state.groups}
           spHttpClient = {this.props.spHttpClient}
           webAbsoluteUrl = {this.props.webAbsoluteUrl}
+          updateGroup = {this.props.groupsSvc.UpdateGroup}
+          extendedView = {this.props.extendedView}
         />
       }
       </div>

@@ -31,6 +31,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         {
             fieldName: "Title",
             minWidth: 100,
+            maxWidth: 200,
             key: "title",
             name: "Title"    ,
             isResizable: true,        
