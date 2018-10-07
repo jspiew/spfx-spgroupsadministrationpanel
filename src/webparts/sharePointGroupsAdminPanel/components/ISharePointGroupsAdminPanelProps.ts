@@ -5,4 +5,5 @@ export interface ISharePointGroupsAdminPanelProps {
   groupsSvc: ISpGroupSvc;
   spHttpClient: SPHttpClient;
   webAbsoluteUrl: string;
+  extendedView: boolean
 }
