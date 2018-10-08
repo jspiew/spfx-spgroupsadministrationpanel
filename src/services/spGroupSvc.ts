@@ -1,11 +1,11 @@
 import { sp } from "@pnp/sp"
-import { ISpGroupSvc, ISpGroup, ISpUser } from "../models";
+import { ISpGroupSvc, ISpGroup, ISpUser, IUserSuggestion } from "../models";
 import { Draft } from "../utils/draft"
 import { BaseWebPartContext } from "@microsoft/sp-webpart-base";
 
 
 export class PnPSpGroupSvc implements ISpGroupSvc {
-    AddGroupMembers: (groupId: number, users: ISpUser[]) => Promise<void>;
+    AddGroupMembers: (groupId: number, users: IUserSuggestion[]) => Promise<void>;
     RemoveGroupMembers: (groupId: number, usersToRemove: ISpUser[]) => Promise<void>;
     GetAllGroupMembers: (groupId: number) => Promise<ISpGroup[]>;
     DeleteGroup: (groupId: number) => Promise<void>;

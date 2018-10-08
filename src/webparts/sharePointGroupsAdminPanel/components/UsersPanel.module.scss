@@ -1,3 +1,8 @@
-.container {
-    display:auto
+.usersPanel {
+    .addPeopleButton {
+        background-color: "[theme: themePrimary, default: #EA35A0]";
+        color: white;
+        margin: 5px;
+        float: right;
+    }
 }
