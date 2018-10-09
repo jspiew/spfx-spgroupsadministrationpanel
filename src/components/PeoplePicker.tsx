@@ -48,7 +48,9 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
                 onValidateInput={this._validateInput}
                 resolveDelay={300}
                 onInputChange={this._onInputChange}
-                onChange = {(items) => {this._onItemsChange(items); this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text}})); this._onRemoveSuggestion(items[0])}}
+                onChange = {(items) => {
+                    this._onItemsChange(items); 
+                    this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text}})); this._onRemoveSuggestion(items[0])}}
             />
         )
     }
