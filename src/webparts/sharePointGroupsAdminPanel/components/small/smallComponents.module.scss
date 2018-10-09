@@ -1,3 +1,6 @@
 .spUserPersona {
-    margin-bottom: 2px
+    margin-bottom: 2px;
+    .secondaryTextColor {
+        color: inherit !important;
+    }
 }

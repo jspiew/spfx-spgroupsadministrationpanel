@@ -14,9 +14,11 @@ export function SpUserPersona(props: { user: IUserSuggestion, personaProps?: IPe
     sharedProps.size = sharedProps.size || PersonaSize.small;
     sharedProps.imageUrl = sharedProps.imageUrl || _getTHumbnailUrl(props.user.Email);
     sharedProps.onRenderSecondaryText = sharedProps.onRenderSecondaryText || (() => {
-        return <a href={props.user.Email}>{props.user.Email}</a>
+        return <a href={props.user.Email} className={styles.secondaryTextColor}>
+                    <i className="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>
+                    {props.user.Email}
+                </a>
     });
-    
     return (
         <Persona
             className = {styles.spUserPersona}
