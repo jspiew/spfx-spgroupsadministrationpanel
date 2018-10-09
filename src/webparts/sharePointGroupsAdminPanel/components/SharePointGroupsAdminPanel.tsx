@@ -52,7 +52,7 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
       case spGroupAdminPanelViewType.ExtendedList:
         groupDisplay = <GroupList
           groups={this.state.groups}
-          updateGroup={this.props.groupsSvc.UpdateGroup}
+          groupsSvc = {this.props.groupsSvc}
           extendedView={true}
           usersSvc = {this.props.usersSvc}
         />
@@ -60,7 +60,7 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
       default:
         groupDisplay = <GroupList
           groups={this.state.groups}
-          updateGroup={this.props.groupsSvc.UpdateGroup}
+          groupsSvc={this.props.groupsSvc}
           extendedView={false}
           usersSvc={this.props.usersSvc}
         />

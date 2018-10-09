@@ -3,7 +3,7 @@ import styles from './GroupsList.module.scss';
 import {
     DetailsList,
     IColumn} from 'office-ui-fabric-react/lib/DetailsList';
-import { ISpGroup, IUsersSvc } from '../../../models';
+import { ISpGroup, IUsersSvc, ISpGroupSvc } from '../../../models';
 import {SpUserPersona, SpUsersFacepile} from "./small/userDisplays"
 import UsersPanel from "./UsersPanel"
 import { SPHttpClient } from '@microsoft/sp-http';
@@ -21,7 +21,7 @@ export interface IGroupsListProps {
     extendedView? : boolean,
     groups: Array<ISpGroup>,
     usersSvc: IUsersSvc,
-    updateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<any>
+    groupsSvc: ISpGroupSvc
 }
 
 export default class GroupsList extends React.Component<IGroupsListProps, IGroupsListState> {
@@ -89,7 +89,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                         onAbbrText= "Only group members can view other members"
                         defaultValue = {item.OnlyAllowMembersViewMembership}
                         onChanged = {(checked) => {
-                            this.props.updateGroup(item.Id, {OnlyAllowMembersViewMembership : checked}).catch(() =>{
+                            this.props.groupsSvc.UpdateGroup(item.Id, {OnlyAllowMembersViewMembership : checked}).catch(() =>{
                                 Dialog.alert(`There was an error while updating the "View members right" property of the "${item.Title}" group.`)
                             })
                         }}
@@ -110,7 +110,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                         onAbbrText="Members can edit other group members"
                         defaultValue={item.OnlyAllowMembersViewMembership}
                         onChanged={(checked) => {
-                            this.props.updateGroup(item.Id, { AllowMembersEditMembership: checked }).catch(() => {
+                            this.props.groupsSvc.UpdateGroup(item.Id, { AllowMembersEditMembership: checked }).catch(() => {
                                 Dialog.alert(`There was an error while updating the "Allow Members Edit Membership" property of the "${item.Title}" group.`)
                             })
                         }}
@@ -144,10 +144,13 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                     columns = {this.props.extendedView ? [...this._basicColumns,...this._extendedColumns] : this._basicColumns}
                 />
                 <UsersPanel 
-                    groupTitle = {openGroup == null ? "Undefined" : openGroup.Title}
+                    group  = {this.state.openGroup}
                     isOpen={this.state.isGroupEditPanelOpen}
-                    users = {openGroup == null ? [] : openGroup.Users}
+                    users = {this.state.openGroup == null ? [] : openGroup.Users}
                     usersSvc = {this.props.usersSvc}
+                    addUsersToGroup = {this.props.groupsSvc.AddGroupMembers}
+                    removeUsersFromGroup = {this.props.groupsSvc.RemoveGroupMembers}
+                    
                 />
             </div>
         );

@@ -20,7 +20,6 @@ export interface IPeoplePickerProps {
     svc: IUsersSvc
     onChanged: (selectedUsers: Array<IUserSuggestion>) => void
     disabled?: boolean
-    selectedItems?: Array<IUserSuggestion>
 }
 
 export default class PeoplePicker extends React.Component<IPeoplePickerProps, IPeoplePickerState> {
@@ -36,20 +35,20 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
 
     public render() {
         return (
-            <ListPeoplePicker
+            <NormalPeoplePicker
                 onResolveSuggestions={this._onFilterChanged}
                 onEmptyInputFocus={this._returnMostRecentlyUsed}
                 getTextFromItem={this._getTextFromItem}
-                selectedItems={this.props.selectedItems.map<IPersonaProps>(u =>{ return {text: u.Title, secondaryText: u.Email}})}
                 className={'ms-PeoplePicker'}
                 disabled = {this.props.disabled}
                 pickerSuggestionsProps={this._suggestionProps}
                 key={'list'}
+                selectedItems = {this.state.peopleList}
                 onRemoveSuggestion={this._onRemoveSuggestion}
                 onValidateInput={this._validateInput}
                 resolveDelay={300}
                 onInputChange={this._onInputChange}
-                onChange = {(items) => {this._onItemsChange(items); this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text}}))}}
+                onChange = {(items) => {this._onItemsChange(items); this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text}})); this._onRemoveSuggestion(items[0])}}
             />
         )
     }

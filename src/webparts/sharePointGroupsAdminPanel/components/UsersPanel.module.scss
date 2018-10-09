@@ -5,4 +5,11 @@
         margin: 5px;
         float: right;
     }
+
+    .userToBeRemovedText{
+        color: darkred;
+    }
+    .userToBeAddedText{
+        color: "[theme: themePrimary, default: #EA35A0]";
+    }
 }
