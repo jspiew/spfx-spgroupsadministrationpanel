@@ -63,9 +63,12 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             onRender: (item: ISpGroup) => {
                 return (
                     <a href='#' onClick = {()=>{
-                        this.setState({
-                            openGroup: item,
-                            isGroupEditPanelOpen: true
+                        this.props.groupsSvc.GetUsersFromGroup(item.Id).then(users => {
+                            item.Users = users;
+                            this.setState({
+                                openGroup: item,
+                                isGroupEditPanelOpen: true
+                            })
                         })
                     }}>
                         Edit users
@@ -136,7 +139,6 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
     }
 
     public render(): React.ReactElement<IGroupsListProps> {
-        let openGroup = this.state.openGroup;
         return (
             <div className={styles.groupsList}>
                 <DetailsList
@@ -146,7 +148,6 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                 <UsersPanel 
                     group  = {this.state.openGroup}
                     isOpen={this.state.isGroupEditPanelOpen}
-                    users = {this.state.openGroup == null ? [] : openGroup.Users}
                     usersSvc = {this.props.usersSvc}
                     addUsersToGroup = {this.props.groupsSvc.AddGroupMembers}
                     removeUsersFromGroup = {this.props.groupsSvc.RemoveGroupMembers}

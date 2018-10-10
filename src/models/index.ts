@@ -1,12 +1,13 @@
 import { Draft } from "../utils/draft"
 
 export interface ISpGroupSvc {
-    GetGroups: () => Promise<Array<ISpGroup>>,
-    UpdateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<void>;
+    GetGroups: () => Promise<Array<ISpGroup>>
+    GetUsersFromGroup: (groupId: number) => Promise<Array<ISpUser>>
+    UpdateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<void>
     AddGroupMembers: (groupId: number, users: Array<IUserSuggestion>) => Promise<void>
     RemoveGroupMembers: (groupId: number, usersToRemove: Array<ISpUser>) => Promise<void>
     GetAllGroupMembers: (groupId: number) => Promise<Array<ISpGroup>>
-    AddGroup: (group: ISpGroup) => Promise<ISpGroup>;
+    AddGroup: (group: ISpGroup) => Promise<ISpGroup>
     DeleteGroup: (groupId: number) => Promise<void>
 }
 

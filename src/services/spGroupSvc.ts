@@ -13,14 +13,11 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
 
     private readonly groupEndpoint =
         {
-            expandables: ["Owner", "Users"],
+            expandables: ["Owner"],
             selectables: [
                 "Owner/Email",
                 "Owner/Id",
                 "Owner/Title",
-                "Users/Email",
-                "Users/Title",
-                "Users/Id",
                 "AllowMembersEditMembership",
                 "AllowRequestToJoinLeave",
                 "AutoAcceptRequestToJoinLeave",
@@ -50,6 +47,11 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
         await sp.web.siteGroups.getById(groupId).update(
             changes
         );
+    }
+
+    async GetUsersFromGroup(groupId: number){
+        let selectables = ["Email","Title", "Id"]
+        return sp.web.siteGroups.getById(groupId).users.select(...selectables).get()
     }
 
     async AddGroup(group:ISpGroup) {

@@ -20,7 +20,6 @@ export interface IUsersPanelState {
 export interface IUsersPanelProps {
     isOpen: boolean
     group: ISpGroup
-    users: Array<ISpUser>
     usersSvc: IUsersSvc
     addUsersToGroup: (groupId: number, user: IUserSuggestion[]) => Promise<any>
     removeUsersFromGroup: (groupId: number, users: ISpUser[]) => Promise<any>
@@ -32,9 +31,15 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
         this.state = {
             usersToAdd : [],
             usersToRemove : [],
-            originalUsers: this.props.users,
+            originalUsers: this.props.group.Users,
             usersAreBeingAdded : false
         }
+    }
+
+    public componentWillReceiveProps(props:IUsersPanelProps){
+        this.setState({
+            originalUsers: props.group.Users
+        })
     }
     public render(){
         if (this.props.group == null){
