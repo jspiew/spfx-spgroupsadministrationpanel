@@ -15,7 +15,7 @@ export function SpUserPersona(props: { user: IUserSuggestion, onDelete?: (user:I
     sharedProps.imageUrl = sharedProps.imageUrl || _getTHumbnailUrl(props.user.Email);
     sharedProps.onRenderSecondaryText = sharedProps.onRenderSecondaryText || (() => {
         return <a href={props.user.Email} className={styles.secondaryTextColor}>
-                    {props.user.Email && <i className="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>}
+                    {props.user.Email &&<i className="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>}
                     {props.user.Email}
                 </a>
     });
@@ -24,8 +24,8 @@ export function SpUserPersona(props: { user: IUserSuggestion, onDelete?: (user:I
             <Persona
                 className = {styles.persona}
                 {...sharedProps}/>
-                ABC
-            <i className={`ms-Icon ms-Icon--Delete ${styles.deleteIcon}`} aria-hidden="true" onClick = {() => {props.onDelete(props.user)}}></i>
+                
+            {props.onDelete && <i className={`${styles.deleteIcon} ms-Icon ms-Icon--Cancel`} aria-hidden="true" onClick = {() => {props.onDelete(props.user)}}></i>}
         </div>
         
     )

@@ -38,7 +38,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
 
     public componentWillReceiveProps(props:IUsersPanelProps){
         this.setState({
-            originalUsers: props.group.Users
+            originalUsers: props.group ? props.group.Users : [],
         })
     }
     public render(){
