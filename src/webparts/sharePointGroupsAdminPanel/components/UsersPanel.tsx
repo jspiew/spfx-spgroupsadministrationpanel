@@ -31,7 +31,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
         this.state = {
             usersToAdd : [],
             usersToRemove : [],
-            originalUsers: this.props.group.Users,
+            originalUsers: this.props.group ? this.props.group.Users: [],
             usersAreBeingAdded : false
         }
     }
@@ -60,17 +60,17 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
 
                 {this.state.usersToAdd.length > 0 && <h4 className = {styles.userToBeAddedText}>Following users will be added</h4>}
                 {this.state.usersToAdd.map(u => {
-                    return <SpUserPersona user={u} />
+                    return <SpUserPersona user={u} onDelete = {this._removeUserToAdd} />
                 })}
                 
                 {this.state.usersToRemove.length > 0 && <h4 className={styles.userToBeRemovedText}>Following users will be removed</h4>}
                 {this.state.usersToRemove.map(u => {
-                    return <SpUserPersona user={u} />
+                    return <SpUserPersona user={u} onDelete = {this._removeUserToRemove} />
                 })}
 
                 {this.state.originalUsers.length > 0 && <h4>Following users will remain in group</h4>}
                 {this.state.originalUsers.map(u => {
-                    return <SpUserPersona user={u} />
+                    return <SpUserPersona user={u} onDelete = {this._removeOriginalUser}/>
                 })}
                 
                 {this.state.usersAreBeingAdded && <Spinner size = {SpinnerSize.small}/>}
@@ -80,8 +80,41 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
 
     @autobind
     private _peoplePickerChanged(items: IUserSuggestion[]){
+        let itemsToAdd = items.filter(i => {return !this.isUserSelected(i)})
         this.setState({
-            usersToAdd: [...this.state.usersToAdd, ...items]
+            usersToAdd: [...this.state.usersToAdd, ...itemsToAdd]
+        })
+    }
+
+    @autobind
+    private _removeOriginalUser(user: ISpUser){
+        let newOriginalUsers = [...this.state.originalUsers].filter(u => { u.Email.toLowerCase() !== user.Email.toLowerCase() })
+        let newUsersToRemove = [...this.state.usersToRemove]
+        newUsersToRemove.push(user);
+
+        this.setState({
+            usersToRemove: newUsersToRemove,
+            originalUsers: newOriginalUsers
+        })
+    }
+
+    @autobind
+    private _removeUserToRemove(user: ISpUser) {
+        let newUsersToRemove = [...this.state.usersToRemove].filter(u => { u.Email.toLowerCase() !== user.Email.toLowerCase() })
+        let newOriginalUsers = [...this.state.originalUsers]
+        newOriginalUsers.push(user);
+
+        this.setState({
+            usersToRemove: newUsersToRemove,
+            originalUsers: newOriginalUsers
+        })
+    }
+
+    @autobind
+    private  _removeUserToAdd(user: ISpUser){
+        let newUsersToAdd = [...this.state.usersToAdd].filter(u => { u.Email.toLowerCase() !== user.Email.toLowerCase() })
+        this.setState({
+            usersToAdd: newUsersToAdd
         })
     }
 
@@ -99,6 +132,17 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                 usersAreBeingAdded: false
             })
         },1000)
+        
+    }
+
+    private isUserSelected(user:IUserSuggestion){
+        let originalEmails = this.state.originalUsers.map(u => u.Email.toLowerCase());
+        let newEmails = this.state.usersToAdd.map(u => u.Email.toLowerCase());
+        let oldEmails = this.state.usersToRemove.map(u => u.Email.toLowerCase());
+
+        let allEmails = [...originalEmails,...newEmails,...oldEmails];
+
+        return allEmails.indexOf(user.Email.toLowerCase()) >= 0
         
     }
 

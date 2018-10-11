@@ -1,6 +1,13 @@
-.spUserPersona {
-    margin-bottom: 2px;
-    .secondaryTextColor {
-        color: inherit !important;
+.spUserPersona{
+    .persona {
+        margin-bottom: 2px;
+        .secondaryTextColor {
+            color: inherit !important;
+        }
+    }
+
+    .deleteIcon {
+        cursor: pointer;
     }
 }
+

@@ -8,23 +8,29 @@ function _getTHumbnailUrl(email:string){
     return `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${email}&UA=0&size=HR64x64`
 }
 
-export function SpUserPersona(props: { user: IUserSuggestion, personaProps?: IPersonaProps}){
+export function SpUserPersona(props: { user: IUserSuggestion, onDelete?: (user:IUserSuggestion) => void, personaProps?: IPersonaProps}){
     let sharedProps = props.personaProps || {};
     sharedProps.text = sharedProps.text || props.user.Title;
     sharedProps.size = sharedProps.size || PersonaSize.small;
     sharedProps.imageUrl = sharedProps.imageUrl || _getTHumbnailUrl(props.user.Email);
     sharedProps.onRenderSecondaryText = sharedProps.onRenderSecondaryText || (() => {
         return <a href={props.user.Email} className={styles.secondaryTextColor}>
-                    <i className="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>
+                    {props.user.Email && <i className="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>}
                     {props.user.Email}
                 </a>
     });
     return (
-        <Persona
-            className = {styles.spUserPersona}
-            {...sharedProps}/>
+        <div className = {styles.spUserPersona}>
+            <Persona
+                className = {styles.persona}
+                {...sharedProps}/>
+                ABC
+            <i className={`ms-Icon ms-Icon--Delete ${styles.deleteIcon}`} aria-hidden="true" onClick = {() => {props.onDelete(props.user)}}></i>
+        </div>
+        
     )
 }
+
 
 export function SpUsersFacepile(props:{users:Array<ISpUser>}){
     return (
