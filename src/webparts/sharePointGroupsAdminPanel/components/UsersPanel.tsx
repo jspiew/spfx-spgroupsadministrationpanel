@@ -74,6 +74,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                 })}
                 
                 {this.state.usersAreBeingAdded && <Spinner size = {SpinnerSize.small}/>}
+                <DefaultButton text="Submit" disabled={this.state.usersToAdd.length == 0 && this.state.usersToRemove.length == 0} onClick={this._submitChanges} />
             </Panel>
         )
     }
@@ -119,19 +120,20 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
     }
 
     @autobind
-    private async _addPeopleButtonClicked() {
+    private async _submitChanges() {
         this.setState({
             usersAreBeingAdded: true
         })
         
-        this.props.addUsersToGroup(this.props.group.Id,this.state.usersToAdd)
+        let addPromise = this.props.addUsersToGroup(this.props.group.Id,this.state.usersToAdd);
+        let removePromise = this.props.removeUsersFromGroup(this.props.group.Id, this.state.usersToRemove);
 
-        setTimeout(() => {
-            this.setState({
-                usersToAdd: [],
-                usersAreBeingAdded: false
-            })
-        },1000)
+        await Promise.all([addPromise,removePromise]);
+        this.setState({
+            usersToAdd: [],
+            usersToRemove: [],
+            usersAreBeingAdded: false
+        });
         
     }
 
