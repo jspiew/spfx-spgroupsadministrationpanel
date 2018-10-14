@@ -1,12 +1,16 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
+import { update, get, } from '@microsoft/sp-lodash-subset';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
   PropertyPaneDropdown
 } from '@microsoft/sp-webpart-base';
+
+import { IComboBoxOption } from 'office-ui-fabric-react/lib/components/ComboBox';
+import {PropertyPaneAsyncGroups} from "../../components/PropertyPaneAsyncGroups"
 
 import * as strings from 'SharePointGroupsAdminPanelWebPartStrings';
 import SharePointGroupsAdminPanel from './components/SharePointGroupsAdminPanel';
@@ -23,6 +27,7 @@ export enum spGroupAdminPanelViewType {
 
 export interface ISharePointGroupsAdminPanelWebPartProps {
   viewType: spGroupAdminPanelViewType
+  groups: number[]
 }
 
 export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWebPart<ISharePointGroupsAdminPanelWebPartProps> {
@@ -49,6 +54,23 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
 
   protected get dataVersion(): Version {
     return Version.parse('1.0');
+  }
+
+  private async _getGroupsForPropertyPane(): Promise<IComboBoxOption[]> {
+    let svc = new PnPSpGroupSvc(this.context);
+    let options = (await svc.GetGroupsForDropdown()).map<IComboBoxOption>(g => {return {
+      key: g.Id,
+      text: g.Title
+    }});
+    return options;
+  }
+
+  private _onGroupsChange(propertyPath: string, newValue: any): void {
+    const oldValue: any = get(this.properties, propertyPath);
+    // store new value in web part properties
+    update(this.properties, propertyPath, (): any => { return newValue; });
+    // refresh web part
+    this.render();
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -79,6 +101,12 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
                       text: "Details"
                     }
                   ]
+                }),
+                new PropertyPaneAsyncGroups('groups',{
+                  label: "Selected Groups",
+                  loadOptions: this._getGroupsForPropertyPane.bind(this),
+                  onPropertyChange: this._onGroupsChange.bind(this),
+                  selectedKey: this.properties.groups || []
                 })
               ]
             }

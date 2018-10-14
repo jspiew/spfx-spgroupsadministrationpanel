@@ -21,6 +21,7 @@ export interface IUsersPanelProps {
     isOpen: boolean
     group: ISpGroup
     usersSvc: IUsersSvc
+    onClose: () => void
     addUsersToGroup: (groupId: number, user: IUserSuggestion[]) => Promise<any>
     removeUsersFromGroup: (groupId: number, users: ISpUser[]) => Promise<any>
 }
@@ -51,6 +52,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                 isOpen={this.props.isOpen}
                 type={PanelType.medium}
                 headerText={`${this.props.group.Title} members"`}
+                onDismiss = {this.props.onClose}
             >
                 <PeoplePicker
                     svc = {this.props.usersSvc}
@@ -62,19 +64,22 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                 {this.state.usersToAdd.map(u => {
                     return <SpUserPersona user={u} onDelete = {this._removeUserToAdd} />
                 })}
-                
-                {this.state.usersToRemove.length > 0 && <h4 className={styles.userToBeRemovedText}>Following users will be removed</h4>}
-                {this.state.usersToRemove.map(u => {
-                    return <SpUserPersona user={u} onDelete = {this._removeUserToRemove} />
-                })}
 
-                {this.state.originalUsers.length > 0 && <h4>Following users will remain in group</h4>}
+                <h4>Following users will remain in group</h4>
                 {this.state.originalUsers.map(u => {
                     return <SpUserPersona user={u} onDelete = {this._removeOriginalUser}/>
                 })}
+
+                {this.state.usersToRemove.length > 0 && <h4 className={styles.userToBeRemovedText}>Following users will be removed</h4>}
+                {this.state.usersToRemove.map(u => {
+                    return <SpUserPersona user={u} onDelete={this._removeUserToRemove} />
+                })}
                 
                 {this.state.usersAreBeingAdded && <Spinner size = {SpinnerSize.small}/>}
-                <DefaultButton text="Submit" disabled={this.state.usersToAdd.length == 0 && this.state.usersToRemove.length == 0} onClick={this._submitChanges} />
+                <DefaultButton 
+                    text="Submit" 
+                    disabled={this.state.usersToAdd.length == 0 && this.state.usersToRemove.length == 0} 
+                    onClick={this._submitChanges} />
             </Panel>
         )
     }
@@ -134,6 +139,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
             usersToRemove: [],
             usersAreBeingAdded: false
         });
+        this.props.onClose();
         
     }
 

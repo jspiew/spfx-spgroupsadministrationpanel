@@ -5,9 +5,7 @@ import { BaseWebPartContext } from "@microsoft/sp-webpart-base";
 
 
 export class PnPSpGroupSvc implements ISpGroupSvc {
-    AddGroupMembers: (groupId: number, users: IUserSuggestion[]) => Promise<void>;
-    RemoveGroupMembers: (groupId: number, usersToRemove: ISpUser[]) => Promise<void>;
-    GetAllGroupMembers: (groupId: number) => Promise<ISpGroup[]>;
+    
     DeleteGroup: (groupId: number) => Promise<void>;
 
 
@@ -62,6 +60,21 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
 
         //TODO check if this returns what you think it returns
         return result.data;
+    }
+
+    async AddGroupMembers(groupId: number, users: IUserSuggestion[]) {
+
+        let batch = sp.createBatch();
+        users.forEach(u => { sp.web.siteGroups.getById(groupId).users.inBatch(batch).add(u.Email)})
+        return batch.execute(); 
+     }
+
+    async RemoveGroupMembers(groupId: number, usersToRemove: ISpUser[]){
+
+    }
+
+    async GetGroupsForDropdown() {
+        return  (await sp.web.siteGroups.select("Title","Id").get()) as {Title: string, Id: number}[]
     }
      
 

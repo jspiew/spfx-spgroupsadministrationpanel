@@ -11,6 +11,7 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import {AbbrToggle} from "./small/abbrToggle"
 import { Draft } from '../../../utils/draft';
 import { Dialog } from '@microsoft/sp-dialog/lib/index';
+import { Spinner } from 'office-ui-fabric-react/lib/Spinner';
 
 export interface IGroupsListState {
     openGroup: ISpGroup,
@@ -38,13 +39,14 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         {
             fieldName: "Description",
             minWidth: 100,
+            maxWidth: 200,
             key: "description",
             name: "Description",
             isResizable: true,
         },
         {
             fieldName: "Owner",
-            minWidth: 200,
+            minWidth: 250,
             key: "owner",
             name: "Owner",
             onRender: (item: ISpGroup) => {
@@ -62,17 +64,24 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             name: "Members",
             onRender: (item: ISpGroup) => {
                 return (
-                    <a href='#' onClick = {()=>{
-                        this.props.groupsSvc.GetUsersFromGroup(item.Id).then(users => {
-                            item.Users = users;
+                    <div>
+                        <a href='#' onClick = {()=>{
+
                             this.setState({
-                                openGroup: item,
-                                isGroupEditPanelOpen: true
+                                openGroup: item
+                            });
+
+                            this.props.groupsSvc.GetUsersFromGroup(item.Id).then(users => {
+                                item.Users = users;
+                                this.setState({
+                                    isGroupEditPanelOpen: true
+                                })
                             })
-                        })
-                    }}>
-                        Edit users
-                    </a>
+                        }}>
+                            Edit users
+                        </a>
+                        {(this.state.openGroup && this.state.openGroup.Id == item.Id) && <Spinner />}
+                    </div>
                 )
             },
         }
@@ -111,7 +120,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                     <AbbrToggle
                         offAbbrText="Only group owner can edit members"
                         onAbbrText="Members can edit other group members"
-                        defaultValue={item.OnlyAllowMembersViewMembership}
+                        defaultValue={item.AllowMembersEditMembership}
                         onChanged={(checked) => {
                             this.props.groupsSvc.UpdateGroup(item.Id, { AllowMembersEditMembership: checked }).catch(() => {
                                 Dialog.alert(`There was an error while updating the "Allow Members Edit Membership" property of the "${item.Title}" group.`)
@@ -151,7 +160,10 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                     usersSvc = {this.props.usersSvc}
                     addUsersToGroup = {this.props.groupsSvc.AddGroupMembers}
                     removeUsersFromGroup = {this.props.groupsSvc.RemoveGroupMembers}
-                    
+                    onClose = {() => {this.setState({
+                        openGroup: null,
+                        isGroupEditPanelOpen: false
+                    })}}
                 />
             </div>
         );

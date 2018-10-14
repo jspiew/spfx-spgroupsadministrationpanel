@@ -21,11 +21,10 @@ export function SpUserPersona(props: { user: IUserSuggestion, onDelete?: (user:I
     });
     return (
         <div className = {styles.spUserPersona}>
+            {props.onDelete && <i className={`${styles.deleteIcon} ms-Icon ms-Icon--Delete`} aria-hidden="true" onClick={() => { props.onDelete(props.user) }}></i>}
             <Persona
                 className = {styles.persona}
                 {...sharedProps}/>
-                
-            {props.onDelete && <i className={`${styles.deleteIcon} ms-Icon ms-Icon--Cancel`} aria-hidden="true" onClick = {() => {props.onDelete(props.user)}}></i>}
         </div>
         
     )
