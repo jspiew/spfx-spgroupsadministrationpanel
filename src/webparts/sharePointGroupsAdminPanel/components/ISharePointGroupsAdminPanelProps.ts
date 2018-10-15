@@ -4,6 +4,7 @@ import {spGroupAdminPanelViewType} from "../SharePointGroupsAdminPanelWebPart"
 
 export interface ISharePointGroupsAdminPanelProps {
   groupsSvc: ISpGroupSvc;
+  selectedGroups: number[];
   usersSvc: IUsersSvc;
   spHttpClient: SPHttpClient;
   webAbsoluteUrl: string;

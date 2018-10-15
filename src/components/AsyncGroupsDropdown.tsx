@@ -12,13 +12,13 @@ export interface IAsyncGroupsDropdownsProps {
     label: string;
     loadOptions: () => Promise<IComboBoxOption[]>;
     onChanged: (options: IComboBoxOption[], index?: number) => void;
-    selectedKey: string[] | number[];
+    selectedKey:  number[];
     disabled: boolean;
     stateKey: string;
 }
 
 export default class AsyncGroupsDropdowns extends React.Component<IAsyncGroupsDropdownsProps, IAsyncGroupsDropdownsState> {
-    private selectedKeys: string[] | number[];
+    private selectedKeys:  number[];
 
     constructor(props: IAsyncGroupsDropdownsProps, state: IAsyncGroupsDropdownsState) {
         super(props);
@@ -51,6 +51,7 @@ export default class AsyncGroupsDropdowns extends React.Component<IAsyncGroupsDr
 
         this.props.loadOptions()
             .then((options: IComboBoxOption[]): void => {
+                options.forEach(o => { o.selected = this.props.selectedKey.indexOf(o.key as number) >= 0})
                 this.setState({
                     loading: false,
                     error: undefined,
@@ -90,12 +91,11 @@ export default class AsyncGroupsDropdowns extends React.Component<IAsyncGroupsDr
                 o.selected = option.selected;
             }
         });
-        this.setState((prevState: IAsyncGroupsDropdownsState, props: IAsyncGroupsDropdownsProps): IAsyncGroupsDropdownsState => {
-            prevState.options = options;
-            return prevState;
+        this.setState({
+            options: [...options]
         });
         if (this.props.onChanged) {
-            this.props.onChanged(options, index);
+            this.props.onChanged(options.filter(o => o.selected), index);
         }
     }
 }

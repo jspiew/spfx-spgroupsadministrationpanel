@@ -37,6 +37,10 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
     this._loadGroups();
   }
 
+  public componentWillReceiveProps() {
+    this._loadGroups()
+  }
+
   public render(): React.ReactElement<ISharePointGroupsAdminPanelProps> {
     let groupDisplay: JSX.Element = null;
 
@@ -83,7 +87,7 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
     this.setState({
       areGroupsLoading: true
     });
-    this.props.groupsSvc.GetGroups().then((groups) => {
+    this.props.groupsSvc.GetGroups(this.props.selectedGroups).then((groups) => {
       this.setState({
         groups: groups,
         areGroupsLoading: false

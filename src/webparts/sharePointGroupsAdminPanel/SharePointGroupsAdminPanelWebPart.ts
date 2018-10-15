@@ -38,6 +38,7 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
       SharePointGroupsAdminPanel,
       {
         groupsSvc: new PnPSpGroupSvc(this.context),
+        selectedGroups: this.properties.groups,
         spHttpClient: this.context.spHttpClient,
         webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
         viewType : this.properties.viewType,
