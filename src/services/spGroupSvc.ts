@@ -72,7 +72,12 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
     async AddGroupMembers(groupId: number, users: IUserSuggestion[]) {
 
         let batch = sp.createBatch();
-        users.forEach(u => { sp.web.siteGroups.getById(groupId).users.inBatch(batch).add(u.Email)})
+        let ensuredUsersBatch = sp.createBatch();
+        let ensuredUsersPromises = users.map(u => sp.web.inBatch(ensuredUsersBatch).ensureUser(u.Email));
+        await ensuredUsersBatch.execute();
+        let ensuredUsers = await Promise.all(ensuredUsersPromises);
+
+        ensuredUsers.forEach(u => { sp.web.siteGroups.getById(groupId).users.inBatch(batch).add(u.data.LoginName)})
         return batch.execute(); 
      }
 
