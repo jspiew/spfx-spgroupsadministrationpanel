@@ -34,11 +34,11 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
   }
 
   public componentDidMount() {
-    this._loadGroups();
+    this._loadGroups(this.props.selectedGroups);
   }
 
-  public componentWillReceiveProps() {
-    this._loadGroups()
+  public componentWillReceiveProps(nextProps: ISharePointGroupsAdminPanelProps) {
+    this._loadGroups(nextProps.selectedGroups);
   }
 
   public render(): React.ReactElement<ISharePointGroupsAdminPanelProps> {
@@ -74,7 +74,7 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
     return (
       <div className={ styles.sharePointGroupsAdminPanel }>
       {this.state.areGroupsLoading && <Spinner label="Loading groups"/>}
-      { this.state.groups && 
+      {!this.state.areGroupsLoading && this.state.groups && 
         groupDisplay
       }
       </div>
@@ -83,11 +83,11 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
 
 
   @autobind
-  private _loadGroups() {
+  private _loadGroups(groupIds: number[]) {
     this.setState({
       areGroupsLoading: true
     });
-    this.props.groupsSvc.GetGroups(this.props.selectedGroups).then((groups) => {
+    this.props.groupsSvc.GetGroups(groupIds).then((groups) => {
       this.setState({
         groups: groups,
         areGroupsLoading: false

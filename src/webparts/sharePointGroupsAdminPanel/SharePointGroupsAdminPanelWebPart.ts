@@ -17,6 +17,7 @@ import SharePointGroupsAdminPanel from './components/SharePointGroupsAdminPanel'
 import { ISharePointGroupsAdminPanelProps } from './components/ISharePointGroupsAdminPanelProps';
 import { PnPSpGroupSvc } from '../../services/spGroupSvc';
 import { UserProfileUserSvc } from '../../services/userProfileUserSvc';
+import { ITag } from 'office-ui-fabric-react/lib/Pickers';
 
 
 export enum spGroupAdminPanelViewType {
@@ -57,11 +58,11 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
     return Version.parse('1.0');
   }
 
-  private async _getGroupsForPropertyPane(): Promise<IComboBoxOption[]> {
+  private async _getGroupsForPropertyPane(): Promise<ITag[]> {
     let svc = new PnPSpGroupSvc(this.context);
-    let options = (await svc.GetGroupsForDropdown()).map<IComboBoxOption>(g => {return {
-      key: g.Id,
-      text: g.Title
+    let options = (await svc.GetGroupsForDropdown()).map<ITag>(g => {return {
+      key: g.Id.toString(),
+      name: g.Title
     }});
     return options;
   }

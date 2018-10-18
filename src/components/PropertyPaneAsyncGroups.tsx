@@ -5,14 +5,15 @@ import {
   PropertyPaneFieldType
 } from '@microsoft/sp-webpart-base';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/components/ComboBox';
-import AsyncGroupsDropdown, { IAsyncGroupsDropdownsProps, IAsyncGroupsDropdownsState } from './AsyncGroupsDropdown';
+import AsyncGroupsPicker, { IAsyncGroupsPickerProps, IAsyncGroupsPickerState } from './AsyncGroupsPicker';
 import { IPropertyPaneCustomFieldProps } from '@microsoft/sp-webpart-base'
+import { ITag } from 'office-ui-fabric-react/lib/Pickers';
 
 export interface IPropertyPaneAsyncGroupsProps {
     label: string;
-    loadOptions: () => Promise<IComboBoxOption[]>;
+    loadOptions: () => Promise<ITag[]>;
     onPropertyChange: (propertyPath: string, newValue: any) => void;
-    selectedKey: string[] | number[];
+    selectedKey: number[];
     disabled?: boolean;
 }
 
@@ -51,7 +52,7 @@ export class PropertyPaneAsyncGroups implements IPropertyPaneField<IPropertyPane
       this.elem = elem;
     }
 
-    const element: React.ReactElement<IAsyncGroupsDropdownsProps> = React.createElement(AsyncGroupsDropdown, {
+    const element: React.ReactElement<IAsyncGroupsPickerProps> = React.createElement(AsyncGroupsPicker, {
       label: this.properties.label,
       loadOptions: this.properties.loadOptions,
       onChanged: this.onChanged.bind(this),
@@ -63,7 +64,7 @@ export class PropertyPaneAsyncGroups implements IPropertyPaneField<IPropertyPane
     ReactDom.render(element, elem);
   }
 
-    private onChanged(options: IComboBoxOption[], index?: number): void {
-        this.properties.onPropertyChange(this.targetProperty, options.map(o => o.key));
+    private onChanged(options: ITag[], index?: number): void {
+        this.properties.onPropertyChange(this.targetProperty, options.map(o => parseInt(o.key)));
     }
 }
