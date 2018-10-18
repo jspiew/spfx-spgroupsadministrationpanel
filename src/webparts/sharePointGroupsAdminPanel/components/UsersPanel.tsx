@@ -54,6 +54,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                 headerText={`${this.props.group.Title} members"`}
                 onDismiss = {this.props.onClose}
             >
+            
                 <PeoplePicker
                     svc = {this.props.usersSvc}
                     onChanged = {this._peoplePickerChanged}
@@ -75,11 +76,11 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                     return <SpUserPersona user={u} onDelete={this._removeUserToRemove} />
                 })}
                 
-                {this.state.usersAreBeingAdded && <Spinner size = {SpinnerSize.small}/>}
                 <DefaultButton 
                     text="Submit" 
-                    disabled={this.state.usersToAdd.length == 0 && this.state.usersToRemove.length == 0} 
-                    onClick={this._submitChanges} />
+                    disabled={this.state.usersToAdd.length == 0 && this.state.usersToRemove.length == 0 &&this.state.usersAreBeingAdded } 
+                    onClick={this._submitChanges} /> 
+                {this.state.usersAreBeingAdded && <Spinner size={SpinnerSize.small} />}
             </Panel>
         )
     }
@@ -94,7 +95,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
 
     @autobind
     private _removeOriginalUser(user: ISpUser){
-        let newOriginalUsers = [...this.state.originalUsers].filter(u => { u.Email.toLowerCase() !== user.Email.toLowerCase() })
+        let newOriginalUsers = [...this.state.originalUsers].filter(u => u.Email.toLowerCase() !== user.Email.toLowerCase() )
         let newUsersToRemove = [...this.state.usersToRemove]
         newUsersToRemove.push(user);
 
@@ -106,7 +107,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
 
     @autobind
     private _removeUserToRemove(user: ISpUser) {
-        let newUsersToRemove = [...this.state.usersToRemove].filter(u => { u.Email.toLowerCase() !== user.Email.toLowerCase() })
+        let newUsersToRemove = [...this.state.usersToRemove].filter(u =>  u.Email.toLowerCase() !== user.Email.toLowerCase() )
         let newOriginalUsers = [...this.state.originalUsers]
         newOriginalUsers.push(user);
 
@@ -118,7 +119,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
 
     @autobind
     private  _removeUserToAdd(user: ISpUser){
-        let newUsersToAdd = [...this.state.usersToAdd].filter(u => { u.Email.toLowerCase() !== user.Email.toLowerCase() })
+        let newUsersToAdd = [...this.state.usersToAdd].filter(u =>  u.Email.toLowerCase() !== user.Email.toLowerCase() )
         this.setState({
             usersToAdd: newUsersToAdd
         })

@@ -44,6 +44,9 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
                 pickerSuggestionsProps={this._suggestionProps}
                 key={'list'}
                 selectedItems = {this.state.peopleList}
+                inputProps = {{
+                    placeholder : "Select user"
+                }}
                 onRemoveSuggestion={this._onRemoveSuggestion}
                 onValidateInput={this._validateInput}
                 resolveDelay={300}
