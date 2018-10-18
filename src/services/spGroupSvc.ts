@@ -40,7 +40,7 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
     async GetGroups(ids?:number[]) {
         if (ids) {
             let batch = sp.createBatch();
-            let groupPromises = ids.map(i => {return sp.web.siteGroups.getById(i).inBatch(batch).get<ISpGroup>()});
+            let groupPromises = ids.map(i => { return sp.web.siteGroups.getById(i).expand(...this.groupEndpoint.expandables).select(...this.groupEndpoint.selectables).inBatch(batch).get<ISpGroup>()});
             await batch.execute();
             return (await Promise.all(groupPromises))
         } else  {
