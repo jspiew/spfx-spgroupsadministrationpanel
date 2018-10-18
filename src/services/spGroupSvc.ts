@@ -77,7 +77,9 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
      }
 
     async RemoveGroupMembers(groupId: number, usersToRemove: ISpUser[]){
-
+        let batch = sp.createBatch();
+        usersToRemove.forEach(u => { sp.web.siteGroups.getById(groupId).users.inBatch(batch).removeById(u.Id) })
+        return batch.execute(); 
     }
 
     async GetGroupsForDropdown() {
