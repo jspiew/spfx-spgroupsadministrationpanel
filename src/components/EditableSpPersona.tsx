@@ -31,7 +31,7 @@ export default class EditableSpPersona extends React.Component<IEditableSpPerson
                     <SpUserPersona user={this.props.user}/>
                 </div>
                 <div className={styles.editIcon}>
-                    Edit<i className="ms-Icon ms-Icon--EditContact" aria-hidden="true"></i>
+                    Edit <i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
                 </div>
             </div>
         )
