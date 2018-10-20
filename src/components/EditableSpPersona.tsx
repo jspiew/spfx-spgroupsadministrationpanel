@@ -7,6 +7,7 @@ import styles from "./EditableSpPersona.module.scss"
 import PeoplePicker from "./PeoplePicker"
 export interface IEditableSpPersonaState {
     isEditMode: boolean;
+    user: IUserSuggestion
 }
 
 export interface IEditableSpPersonaProps {
@@ -20,8 +21,23 @@ export default class EditableSpPersona extends React.Component<IEditableSpPerson
         super(props);
 
         this.state = {
-            isEditMode: false
+            isEditMode: false,
+            user: this.props.user
         };
+    }
+
+    public componentDidMount(){
+        this.setState({
+            isEditMode: false,
+            user: this.props.user
+        });
+    }
+
+    public componentWillReceiveProps(nextProps: IEditableSpPersonaProps){
+        this.setState({
+            isEditMode: false,
+            user: nextProps.user
+        });
     }
 
     public render() {
@@ -30,7 +46,7 @@ export default class EditableSpPersona extends React.Component<IEditableSpPerson
         return (
             <div className={styles.editableSpPersona} onClick={this.state.isEditMode ? () => { } : this._onPersonaClick }>
                 <div className={styles.persona}>
-                    <SpUserPersona user={this.props.user}/>
+                    <SpUserPersona user={this.state.user}/>
                 </div>
                 <div className={styles.editIcon}>
                     Edit <i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
@@ -43,8 +59,22 @@ export default class EditableSpPersona extends React.Component<IEditableSpPerson
         return (
             <PeoplePicker 
                 svc = {this.props.svc}
-                onChanged = {(users) => {this.props.onChanged(users[0])}}
+                onChanged={(users) => { this._onChange(users[0])}}
             />)
+    }
+
+    private async _onChange(u: IUserSuggestion){
+        try{
+            await this.props.onChanged(u);
+            this.setState({
+                user: u,
+                isEditMode: false
+            })
+        } catch(e) {
+            this.setState({
+                isEditMode: false
+            })
+        }
     }
 
     @autobind

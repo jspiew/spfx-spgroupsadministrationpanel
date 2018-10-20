@@ -3,7 +3,7 @@ import styles from './GroupsList.module.scss';
 import {
     DetailsList,
     IColumn} from 'office-ui-fabric-react/lib/DetailsList';
-import { ISpGroup, IUsersSvc, ISpGroupSvc } from '../../../models';
+import { ISpGroup, IUsersSvc, ISpGroupSvc, IUserSuggestion } from '../../../models';
 import {SpUserPersona, SpUsersFacepile} from "../../../components/small/userDisplays"
 import UsersPanel from "./UsersPanel"
 import { SPHttpClient } from '@microsoft/sp-http';
@@ -13,6 +13,8 @@ import { Draft } from '../../../utils/draft';
 import { Dialog } from '@microsoft/sp-dialog/lib/index';
 import { Spinner } from 'office-ui-fabric-react/lib/Spinner';
 import EditableSpPersona from "../../../components/EditableSpPersona"
+import { autobind } from '@uifabric/utilities/lib';
+import { Item } from '@pnp/sp';
 
 export interface IGroupsListState {
     openGroup: ISpGroup,
@@ -52,7 +54,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             name: "Owner",
             onRender: (item: ISpGroup) => {
                 return (
-                    <EditableSpPersona user = {item.Owner} svc = {this.props.usersSvc} onChanged={(u) => {alert("sukces")}} />
+                    <EditableSpPersona user = {item.Owner} svc = {this.props.usersSvc} onChanged={(u) => {return this._ownerChanged(item,u)}} />
                 )
             },
             isResizable: true,
@@ -170,5 +172,14 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         );
     }
 
+    @autobind
+    private async _ownerChanged(group: ISpGroup, owner: IUserSuggestion) {
+        try{
+            await this.props.groupsSvc.UpdateGroupOwner(group.Id, owner);
+        }
+        catch(e){
+            alert("err");
+        }
+    }
 
 }

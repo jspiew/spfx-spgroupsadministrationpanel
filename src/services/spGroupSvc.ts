@@ -54,6 +54,13 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
         );
     }
 
+    async UpdateGroupOwner(groupId: number, owner: IUserSuggestion){
+        let newOwner = await sp.web.ensureUser(owner.Email);
+        await sp.web.siteGroups.getById(groupId).update({
+            OwnerId: newOwner.data.Id
+        })
+    }
+
     async GetUsersFromGroup(groupId: number){
         let selectables = ["Email","Title", "Id"]
         return sp.web.siteGroups.getById(groupId).users.select(...selectables).get()

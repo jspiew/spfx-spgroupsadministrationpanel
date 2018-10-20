@@ -4,6 +4,7 @@ export interface ISpGroupSvc {
     GetGroups: (ids?: number[]) => Promise<Array<ISpGroup>>
     GetUsersFromGroup: (groupId: number) => Promise<Array<ISpUser>>
     UpdateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<void>
+    UpdateGroupOwner: (groupId: number, owner: IUserSuggestion) => Promise<void>
     AddGroupMembers: (groupId: number, users: Array<IUserSuggestion>) => Promise<void>
     RemoveGroupMembers: (groupId: number, usersToRemove: Array<ISpUser>) => Promise<void>
     AddGroup: (group: ISpGroup) => Promise<ISpGroup>
