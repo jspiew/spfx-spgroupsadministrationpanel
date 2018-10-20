@@ -52,7 +52,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             name: "Owner",
             onRender: (item: ISpGroup) => {
                 return (
-                    <EditableSpPersona user = {item.Owner} onChanged={() => {alert("sukces")}} />
+                    <EditableSpPersona user = {item.Owner} svc = {this.props.usersSvc} onChanged={(u) => {alert("sukces")}} />
                 )
             },
             isResizable: true,

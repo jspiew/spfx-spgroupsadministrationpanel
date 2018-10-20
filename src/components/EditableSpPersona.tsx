@@ -4,6 +4,7 @@ import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
 import { autobind } from '@uifabric/utilities/lib';
 import {SpUserPersona} from "./small/userDisplays"
 import styles from "./EditableSpPersona.module.scss"
+import PeoplePicker from "./PeoplePicker"
 export interface IEditableSpPersonaState {
     isEditMode: boolean;
 }
@@ -11,6 +12,7 @@ export interface IEditableSpPersonaState {
 export interface IEditableSpPersonaProps {
     onChanged: (newUser: IUserSuggestion) => any
     user: IUserSuggestion
+    svc: IUsersSvc
 }
 
 export default class EditableSpPersona extends React.Component<IEditableSpPersonaProps, IEditableSpPersonaState> {
@@ -26,7 +28,7 @@ export default class EditableSpPersona extends React.Component<IEditableSpPerson
         if(this.state.isEditMode) return this._renderEdit();
 
         return (
-            <div className={styles.editableSpPersona}>
+            <div className={styles.editableSpPersona} onClick={this.state.isEditMode ? () => { } : this._onPersonaClick }>
                 <div className={styles.persona}>
                     <SpUserPersona user={this.props.user}/>
                 </div>
@@ -38,6 +40,17 @@ export default class EditableSpPersona extends React.Component<IEditableSpPerson
     }
 
     private _renderEdit(){
-        return (<div></div>)
+        return (
+            <PeoplePicker 
+                svc = {this.props.svc}
+                onChanged = {(users) => {this.props.onChanged(users[0])}}
+            />)
+    }
+
+    @autobind
+    private _onPersonaClick(){
+        this.setState({
+            isEditMode : true
+        })
     }
 }

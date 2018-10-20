@@ -19,7 +19,7 @@ export function SpUserPersona(props: { user: IUserSuggestion, onDelete?: (user:I
         sharedProps.onRenderSecondaryText = sharedProps.onRenderSecondaryText || (() => {
             return <a href={props.user.Email} className={styles.secondaryTextColor}>
                         {props.user.Email &&<i className="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>}
-                        {props.user.Email}
+                        {props.user.Email || "No email address"}
                     </a>
         });
         return (

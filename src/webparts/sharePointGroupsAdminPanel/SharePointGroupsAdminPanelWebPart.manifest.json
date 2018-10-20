@@ -18,7 +18,7 @@
     "group": { "default": "Other" },
     "title": { "default": "SharePoint Groups Admin Panel" },
     "description": { "default": "Modern front for SharePoint group management" },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "Group",
     "properties": {
       "description": "SharePoint Groups Admin Panel"
     }
