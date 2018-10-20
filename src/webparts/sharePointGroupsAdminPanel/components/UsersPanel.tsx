@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './UsersPanel.module.scss';
 import { ISpUser, IUsersSvc, IUserSuggestion, ISpGroupSvc, ISpGroup } from '../../../models';
-import { SpUserPersona } from "./small/userDisplays"
+import { SpUserPersona } from "../../../components/small/userDisplays"
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
 import PeoplePicker from "../../../components/PeoplePicker"
 import { SPHttpClient } from '@microsoft/sp-http';

@@ -1,4 +1,4 @@
-import {ISpUser, IUserSuggestion} from "../../../../models/index"
+import {ISpUser, IUserSuggestion} from "../../models/index"
 import { IPersonaProps  , Persona, PersonaSize } from 'office-ui-fabric-react/lib/Persona';
 import * as React from "react"
 import { IFacepileProps, Facepile, OverflowButtonType, IFacepilePersona } from 'office-ui-fabric-react/lib/Facepile';

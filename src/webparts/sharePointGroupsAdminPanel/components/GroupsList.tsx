@@ -4,14 +4,15 @@ import {
     DetailsList,
     IColumn} from 'office-ui-fabric-react/lib/DetailsList';
 import { ISpGroup, IUsersSvc, ISpGroupSvc } from '../../../models';
-import {SpUserPersona, SpUsersFacepile} from "./small/userDisplays"
+import {SpUserPersona, SpUsersFacepile} from "../../../components/small/userDisplays"
 import UsersPanel from "./UsersPanel"
 import { SPHttpClient } from '@microsoft/sp-http';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
-import {AbbrToggle} from "./small/abbrToggle"
+import { AbbrToggle } from "../../../components/small/abbrToggle"
 import { Draft } from '../../../utils/draft';
 import { Dialog } from '@microsoft/sp-dialog/lib/index';
 import { Spinner } from 'office-ui-fabric-react/lib/Spinner';
+import EditableSpPersona from "../../../components/EditableSpPersona"
 
 export interface IGroupsListState {
     openGroup: ISpGroup,
@@ -51,7 +52,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             name: "Owner",
             onRender: (item: ISpGroup) => {
                 return (
-                    <SpUserPersona user = {item.Owner} />
+                    <EditableSpPersona user = {item.Owner} onChanged={() => {alert("sukces")}} />
                 )
             },
             isResizable: true,

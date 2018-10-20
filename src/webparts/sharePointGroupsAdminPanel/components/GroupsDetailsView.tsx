@@ -5,11 +5,11 @@ import {
     IColumn
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { ISpGroup, ISpUser } from '../../../models';
-import { SpUserPersona, SpUsersFacepile } from "./small/userDisplays"
+import { SpUserPersona, SpUsersFacepile } from "../../../components/small/userDisplays"
 import UsersPanel from "./UsersPanel"
 import { SPHttpClient } from '@microsoft/sp-http';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
-import { AbbrToggle } from "./small/abbrToggle"
+import { AbbrToggle } from "../../../components/small/abbrToggle"
 import { Draft } from '../../../utils/draft';
 import { css, autobind } from '@uifabric/utilities/lib';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
