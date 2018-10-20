@@ -175,7 +175,10 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
     @autobind
     private async _ownerChanged(group: ISpGroup, owner: IUserSuggestion) {
         try{
-            await this.props.groupsSvc.UpdateGroupOwner(group.Id, owner);
+            let newOwner = await this.props.usersSvc.EnsureUser(owner);
+            await this.props.groupsSvc.UpdateGroup(group.Id, {
+                Owner: newOwner
+            });
         }
         catch(e){
             alert("err");

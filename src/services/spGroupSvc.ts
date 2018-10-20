@@ -49,16 +49,11 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
         }
     }
     async UpdateGroup(groupId: number, changes: Draft<ISpGroup>){
+        if (changes.Owner) delete changes.Owner.Email;
+
         await sp.web.siteGroups.getById(groupId).update(
             changes
         );
-    }
-
-    async UpdateGroupOwner(groupId: number, owner: IUserSuggestion){
-        let newOwner = await sp.web.ensureUser(owner.Email);
-        await sp.web.siteGroups.getById(groupId).update({
-            OwnerId: newOwner.data.Id
-        })
     }
 
     async GetUsersFromGroup(groupId: number){

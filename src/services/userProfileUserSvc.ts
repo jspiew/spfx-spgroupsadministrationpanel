@@ -30,4 +30,13 @@ export class UserProfileUserSvc implements IUsersSvc {
         })
     }
 
+    async EnsureUser(suggestion: IUserSuggestion): Promise<ISpUser>{
+        let ensuredUser = await sp.web.ensureUser(suggestion.Email)
+        return {
+            Email: ensuredUser.data.Email,
+            Id: ensuredUser.data.Id,
+            Title: ensuredUser.data.Title
+        }
+    }
+
 }

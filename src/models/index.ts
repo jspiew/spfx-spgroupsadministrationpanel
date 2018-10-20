@@ -4,7 +4,6 @@ export interface ISpGroupSvc {
     GetGroups: (ids?: number[]) => Promise<Array<ISpGroup>>
     GetUsersFromGroup: (groupId: number) => Promise<Array<ISpUser>>
     UpdateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<void>
-    UpdateGroupOwner: (groupId: number, owner: IUserSuggestion) => Promise<void>
     AddGroupMembers: (groupId: number, users: Array<IUserSuggestion>) => Promise<void>
     RemoveGroupMembers: (groupId: number, usersToRemove: Array<ISpUser>) => Promise<void>
     AddGroup: (group: ISpGroup) => Promise<ISpGroup>
@@ -14,6 +13,7 @@ export interface ISpGroupSvc {
 
 export interface IUsersSvc {
     GetUsersSuggestions: (searchText: string) => Promise<Array<IUserSuggestion>>
+    EnsureUser: (suggestion: IUserSuggestion) => Promise<ISpUser>
 }
 
 export interface ISpGroup {
