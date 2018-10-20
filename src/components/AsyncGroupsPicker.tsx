@@ -2,6 +2,8 @@ import * as React from 'react';
 import { TagPicker, ITag } from 'office-ui-fabric-react/lib/components/pickers/TagPicker/TagPicker';
 import { Spinner } from 'office-ui-fabric-react/lib/components/Spinner';
 import { sortBy } from '@microsoft/sp-lodash-subset'
+import { autobind } from '@uifabric/utilities/lib';
+import styles from "./AsyncGroupsPicker.module.scss"
 
 
 export interface IAsyncGroupsPickerState {
@@ -56,7 +58,7 @@ export default class AsyncGroupsPicker extends React.Component<IAsyncGroupsPicke
                     loading: false,
                     error: undefined,
                     options: sortBy(options, o => o.name),
-                    selectedOptions: options.filter( o => this.props.selectedKey.indexOf(parseInt(o.key)) >= 0)
+                    selectedOptions: options.filter( o => (this.props.selectedKey || []).length === 0 || this.props.selectedKey.indexOf(parseInt(o.key)) >= 0)
                 });
             }, (error: any): void => {
                 this.setState((prevState: IAsyncGroupsPickerState, props: IAsyncGroupsPickerProps): IAsyncGroupsPickerState => {
@@ -77,7 +79,7 @@ public render(): JSX.Element {
         const error: JSX.Element = this.state.error !== undefined ? <div className={'ms-TextField-errorMessage ms-u-slideDownIn20'}>Error while loading items: {this.state.error}</div> : <div />;
 
         return (
-            <div>
+            <div className={styles.groupsPicker}>
                 <TagPicker 
                     itemLimit = {20}
                     onEmptyInputFocus = {(selected) => {return this.state.options.filter(o => selected.indexOf(o) < 0)}}
@@ -88,12 +90,26 @@ public render(): JSX.Element {
                     }}
                     onChange = {this.onChanged.bind(this)}
                 />
+                {this.state.selectedOptions.length != this.state.options.length && 
+                    <a className={styles.selectLink} href="#" onClick={this._selectAll}>Select all</a>}
+                &nbsp;
+                {this.state.selectedOptions.length > 0 && 
+                    <a className={styles.selectLink} href="#" onClick={this._deselectAll}>Deselect all</a>}
                 {loading}
                 {error}
             </div>
         );
     }
 
+    @autobind
+    private _selectAll(){
+        this.onChanged([...this.state.options])
+    }
+
+    @autobind
+    private _deselectAll(){
+        this.onChanged([]);
+    }
     private onChanged(options: ITag[]): void {
         this.setState({
             selectedOptions: [...options]

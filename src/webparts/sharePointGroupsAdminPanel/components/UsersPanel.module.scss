@@ -12,4 +12,13 @@
     .userToBeAddedText{
         color: "[theme: themePrimary, default: #EA35A0]";
     }
+
+    .submitOverlay{
+        position:absolute;
+        background-color: white;
+        opacity: 0.8;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: 10;
+    }
 }

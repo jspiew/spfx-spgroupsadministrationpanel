@@ -15,6 +15,7 @@ export interface IUsersPanelState {
     usersToRemove: ISpUser[]
     originalUsers: ISpUser[]
     usersAreBeingAdded: boolean
+    errorMessage: string
 }
 
 export interface IUsersPanelProps {
@@ -33,7 +34,8 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
             usersToAdd : [],
             usersToRemove : [],
             originalUsers: this.props.group ? this.props.group.Users: [],
-            usersAreBeingAdded : false
+            usersAreBeingAdded : false,
+            errorMessage: null
         }
     }
 
@@ -54,7 +56,19 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                 headerText={`${this.props.group.Title} members"`}
                 onDismiss = {this.props.onClose}
             >
-            
+                {this.state.usersAreBeingAdded && 
+                <div className={styles.submitOverlay}>
+                    <Spinner size={SpinnerSize.large} label="Submitting" />
+                </div>}
+                {this.state.errorMessage &&
+                <div>
+                    <h4 style = {{color:"darkred"}}>
+                        An error has occured: {this.state.errorMessage}
+                    </h4>
+                    <DefaultButton
+                        onClick = {this.props.onClose} 
+                        label="OK"/>
+                </div>}
                 <PeoplePicker
                     svc = {this.props.usersSvc}
                     onChanged = {this._peoplePickerChanged}
