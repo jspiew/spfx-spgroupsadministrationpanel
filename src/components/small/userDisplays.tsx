@@ -4,6 +4,7 @@ import * as React from "react"
 import { IFacepileProps, Facepile, OverflowButtonType, IFacepilePersona } from 'office-ui-fabric-react/lib/Facepile';
 import styles from "./smallComponents.module.scss"
 import { Shimmer, ShimmerElementsGroup, ShimmerElementType as ElemType } from 'office-ui-fabric-react/lib/Shimmer';
+import { UserCustomAction } from "@pnp/sp/src/usercustomactions";
 
 
 function _getTHumbnailUrl(email:string){
@@ -13,6 +14,9 @@ function _getTHumbnailUrl(email:string){
 export function SpUserPersona(props: { user: IUserSuggestion, onDelete?: (user:IUserSuggestion) => void, personaProps?: IPersonaProps}){
     if(props.user){
         let sharedProps = props.personaProps || {};
+        if (!props.user.Email){
+            sharedProps.imageInitials = "SG";
+        }
         sharedProps.text = sharedProps.text || props.user.Title;
         sharedProps.size = sharedProps.size || PersonaSize.small;
         sharedProps.imageUrl = sharedProps.imageUrl || _getTHumbnailUrl(props.user.Email);
