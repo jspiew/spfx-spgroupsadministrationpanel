@@ -2,6 +2,7 @@ import * as React from 'react';
 import styles from './GroupsList.module.scss';
 import {
     DetailsList,
+    SelectionMode,
     IColumn} from 'office-ui-fabric-react/lib/DetailsList';
 import { ISpGroup, IUsersSvc, ISpGroupSvc, IUserSuggestion } from '../../../models';
 import {SpUserPersona, SpUsersFacepile} from "../../../components/small/userDisplays"
@@ -171,6 +172,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             <div className={styles.groupsList}>
                 <DetailsList
                     items={this.props.groups}
+                    selectionMode = {SelectionMode.none}
                     columns = {this.props.extendedView ? [...this._basicColumns,...this._extendedColumns] : this._basicColumns}
                 />
                 <UsersPanel 
