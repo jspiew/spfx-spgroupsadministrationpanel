@@ -1,0 +1,28 @@
+.editableTextField{
+    max-width: 100%;
+    width:100%;
+    height:100%;
+    padding: 2px;
+    &:hover{
+        transition: 100ms;
+        cursor: pointer;
+
+        .editIcon{
+            transition: 100ms;
+            display:initial;
+            float:left;
+            color: "[theme: themePrimary, default: #EA35A0]";
+        }
+
+        .text{
+            text-decoration: underline
+        }
+    }
+    .editIcon {
+        display: none;
+    }
+
+    .text{
+        float:left;
+    }
+}

@@ -98,10 +98,11 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
                       key: spGroupAdminPanelViewType.ExtendedList,
                       text: "Extended list"
                     },
-                    {
-                      key: spGroupAdminPanelViewType.Details,
-                      text: "Details"
-                    }
+                    // {
+                    //   key: spGroupAdminPanelViewType.Details,
+                    //   text: "Details"
+                    // }
+                    //might be added at some point
                   ]
                 }),
                 new PropertyPaneAsyncGroups('groups',{

@@ -13,6 +13,7 @@ import { Draft } from '../../../utils/draft';
 import { Dialog } from '@microsoft/sp-dialog/lib/index';
 import { Spinner } from 'office-ui-fabric-react/lib/Spinner';
 import EditableSpPersona from "../../../components/EditableSpPersona"
+import EditableTextField from "../../../components/EditableTextField"
 import { autobind } from '@uifabric/utilities/lib';
 import { Item } from '@pnp/sp';
 
@@ -36,8 +37,13 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             minWidth: 100,
             maxWidth: 200,
             key: "title",
-            name: "Title"    ,
+            name: "Title",
             isResizable: true,        
+            onRender: (item: ISpGroup) => {
+                return (
+                    <EditableTextField value={item.Title} onChanged={(t) => { return this._titleChanged(item, t)}} />
+                )
+            }
         },
         {
             fieldName: "Description",
@@ -46,6 +52,11 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             key: "description",
             name: "Description",
             isResizable: true,
+            onRender: (item: ISpGroup) => {
+                return (
+                    <EditableTextField value={item.Description} onChanged={(t) => { return this._descriptionChanged(item, t) }} />
+                )
+            }
         },
         {
             fieldName: "Owner",
@@ -139,6 +150,11 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             key: "RequestToJoinLeaveEmailSetting",
             name: "Requests email",
             isResizable: true,
+            onRender: (item: ISpGroup) => {
+                return (
+                    <EditableTextField value={item.RequestToJoinLeaveEmailSetting} onChanged={(t) => { return this._requestEmailChanged(item, t) }} />
+                )
+            }
         }
     ]
 
@@ -182,6 +198,36 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         }
         catch(e){
             alert("err");
+        }
+    }
+
+    @autobind
+    private async _titleChanged(group: ISpGroup, title: string) {
+        try{
+            await this.props.groupsSvc.UpdateGroup(group.Id, { Title: title });
+        } catch(e){
+            Dialog.alert(`There was an error while updating the title of the "${group.Title}" group.`)
+            throw e
+        }
+    }
+
+    @autobind
+    private async _descriptionChanged(group: ISpGroup, title: string) {
+        try {
+            await this.props.groupsSvc.UpdateGroup(group.Id, { Description: title });
+        } catch (e) {
+            Dialog.alert(`There was an error while updating the description of the "${group.Title}" group.`)
+            throw e
+        }
+    }
+
+    @autobind
+    private async _requestEmailChanged(group: ISpGroup, title: string) {
+        try {
+            await this.props.groupsSvc.UpdateGroup(group.Id, { RequestToJoinLeaveEmailSetting: title });
+        } catch (e) {
+            Dialog.alert(`There was an error while updating the title of the "${group.Title}" group.`)
+            throw e
         }
     }
 
