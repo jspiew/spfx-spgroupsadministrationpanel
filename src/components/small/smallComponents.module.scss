@@ -1,0 +1,17 @@
+.spUserPersona{
+    .persona {
+        margin-bottom: 2px;
+        .secondaryTextColor {
+            color: inherit !important;
+        }
+    }
+
+    .deleteIcon {
+        cursor: pointer;
+        font-size: 100%;
+        display: block;
+        float: left;
+        font-size: 26px;
+    }
+}
+

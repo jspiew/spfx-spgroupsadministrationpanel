@@ -12,6 +12,9 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { ISpGroup, ISpUser } from '../../../models';
 import { autobind } from '@uifabric/utilities/lib';
+import { spGroupAdminPanelViewType } from '../SharePointGroupsAdminPanelWebPart';
+import {Spinner} from "office-ui-fabric-react/lib/Spinner"
+import GroupsDetailsView from "./GroupsDetailsView"
 
 export interface ISharePointGroupsAdminPanelState {
   groups: Array<ISpGroup>
@@ -31,21 +34,48 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
   }
 
   public componentDidMount() {
-    this._loadGroups();
+    this._loadGroups(this.props.selectedGroups);
+  }
+
+  public componentWillReceiveProps(nextProps: ISharePointGroupsAdminPanelProps) {
+    this._loadGroups(nextProps.selectedGroups);
   }
 
   public render(): React.ReactElement<ISharePointGroupsAdminPanelProps> {
+    let groupDisplay: JSX.Element = null;
+
+    switch(this.props.viewType) {
+      case spGroupAdminPanelViewType.Details: 
+        groupDisplay = <GroupsDetailsView
+          groups={this.state.groups}
+          spHttpClient={this.props.spHttpClient}
+          webAbsoluteUrl={this.props.webAbsoluteUrl}
+          updateGroup={this.props.groupsSvc.UpdateGroup}
+        />
+        break;
+      case spGroupAdminPanelViewType.ExtendedList:
+        groupDisplay = <GroupList
+          groups={this.state.groups}
+          groupsSvc = {this.props.groupsSvc}
+          extendedView={true}
+          usersSvc = {this.props.usersSvc}
+        />
+        break;
+      default:
+        groupDisplay = <GroupList
+          groups={this.state.groups}
+          groupsSvc={this.props.groupsSvc}
+          extendedView={false}
+          usersSvc={this.props.usersSvc}
+        />
+        break;
+    }
+
     return (
       <div className={ styles.sharePointGroupsAdminPanel }>
-      {this.state.areGroupsLoading && "LOADING"}
-      { this.state.groups && 
-        <GroupList 
-          groups = {this.state.groups}
-          spHttpClient = {this.props.spHttpClient}
-          webAbsoluteUrl = {this.props.webAbsoluteUrl}
-          updateGroup = {this.props.groupsSvc.UpdateGroup}
-          extendedView = {this.props.extendedView}
-        />
+      {this.state.areGroupsLoading && <Spinner label="Loading groups"/>}
+      {!this.state.areGroupsLoading && this.state.groups && 
+        groupDisplay
       }
       </div>
     );
@@ -53,11 +83,11 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
 
 
   @autobind
-  private _loadGroups() {
+  private _loadGroups(groupIds: number[]) {
     this.setState({
       areGroupsLoading: true
     });
-    this.props.groupsSvc.GetGroups().then((groups) => {
+    this.props.groupsSvc.GetGroups(groupIds).then((groups) => {
       this.setState({
         groups: groups,
         areGroupsLoading: false

@@ -1,13 +1,19 @@
 import { Draft } from "../utils/draft"
 
 export interface ISpGroupSvc {
-    GetGroups: () => Promise<Array<ISpGroup>>,
-    UpdateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<void>;
-    AddGroupMembers: (groupId: number, users: Array<ISpUser>) => Promise<void>
-    RemoveGroupMembers: (groupId: number, usersToRemove: Array<ISpUser>) => Promise<void>
-    GetAllGroupMembers: (groupId: number) => Promise<Array<ISpGroup>>
-    AddGroup: (group: ISpGroup) => Promise<ISpGroup>;
-    DeleteGroup: (groupId: number) => Promise<void>
+    GetGroups: (ids?: number[]) => Promise<Array<ISpGroup>>
+    GetUsersFromGroup: (groupId: number) => Promise<Array<ISpUser>>
+    UpdateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<any>
+    AddGroupMembers: (groupId: number, users: Array<IUserSuggestion>) => Promise<any>
+    RemoveGroupMembers: (groupId: number, usersToRemove: Array<ISpUser>) => Promise<any>
+    AddGroup: (group: ISpGroup) => Promise<ISpGroup>
+    DeleteGroup: (groupId: number) => Promise<any>
+    GetGroupsForDropdown:() => Promise<{Id: number, Title: string}[]>
+}
+
+export interface IUsersSvc {
+    GetUsersSuggestions: (searchText: string) => Promise<Array<IUserSuggestion>>
+    EnsureUser: (suggestion: IUserSuggestion) => Promise<ISpUser>
 }
 
 export interface ISpGroup {
@@ -26,10 +32,13 @@ export interface ISpGroup {
     Users: Array<ISpUser>
 }
 
-export interface ISpUser {
-    Title: string,
-    Id: number,
-    Email: string
+export interface ISpUser extends IUserSuggestion {
+    Id: number
+}
+
+export interface IUserSuggestion {
+    Email:string,
+    Title: string
 }
 
 

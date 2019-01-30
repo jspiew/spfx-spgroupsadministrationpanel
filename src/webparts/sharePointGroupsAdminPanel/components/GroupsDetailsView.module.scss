@@ -1,0 +1,18 @@
+.groupsDetailsView{
+    .peopleAddIcon {
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 23px;
+        margin-left: 4px;
+
+        &:hover {
+            color: "[theme: themePrimary, default: #EA35A0]";
+            transition: 300ms; 
+            
+        }
+    }
+
+    .groupTitle {
+        display:inline;
+    }
+}

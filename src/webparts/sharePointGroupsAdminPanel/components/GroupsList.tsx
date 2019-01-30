@@ -2,15 +2,21 @@ import * as React from 'react';
 import styles from './GroupsList.module.scss';
 import {
     DetailsList,
+    SelectionMode,
     IColumn} from 'office-ui-fabric-react/lib/DetailsList';
-import { ISpGroup } from '../../../models';
-import {SpUserPersona, SpUsersFacepile} from "./small/userDisplays"
+import { ISpGroup, IUsersSvc, ISpGroupSvc, IUserSuggestion } from '../../../models';
+import {SpUserPersona, SpUsersFacepile} from "../../../components/small/userDisplays"
 import UsersPanel from "./UsersPanel"
 import { SPHttpClient } from '@microsoft/sp-http';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
-import {AbbrToggle} from "./small/abbrToggle"
+import { AbbrToggle } from "../../../components/small/abbrToggle"
 import { Draft } from '../../../utils/draft';
 import { Dialog } from '@microsoft/sp-dialog/lib/index';
+import { Spinner } from 'office-ui-fabric-react/lib/Spinner';
+import EditableSpPersona from "../../../components/EditableSpPersona"
+import EditableTextField from "../../../components/EditableTextField"
+import { autobind } from '@uifabric/utilities/lib';
+import { Item } from '@pnp/sp';
 
 export interface IGroupsListState {
     openGroup: ISpGroup,
@@ -20,9 +26,8 @@ export interface IGroupsListState {
 export interface IGroupsListProps {
     extendedView? : boolean,
     groups: Array<ISpGroup>,
-    spHttpClient: SPHttpClient,
-    webAbsoluteUrl: string,
-    updateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<any>
+    usersSvc: IUsersSvc,
+    groupsSvc: ISpGroupSvc
 }
 
 export default class GroupsList extends React.Component<IGroupsListProps, IGroupsListState> {
@@ -33,24 +38,35 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             minWidth: 100,
             maxWidth: 200,
             key: "title",
-            name: "Title"    ,
+            name: "Title",
             isResizable: true,        
+            onRender: (item: ISpGroup) => {
+                return (
+                    <EditableTextField value={item.Title} onChanged={(t) => { return this._titleChanged(item, t)}} />
+                )
+            }
         },
         {
             fieldName: "Description",
             minWidth: 100,
+            maxWidth: 200,
             key: "description",
             name: "Description",
             isResizable: true,
+            onRender: (item: ISpGroup) => {
+                return (
+                    <EditableTextField value={item.Description} onChanged={(t) => { return this._descriptionChanged(item, t) }} />
+                )
+            }
         },
         {
             fieldName: "Owner",
-            minWidth: 200,
+            minWidth: 250,
             key: "owner",
             name: "Owner",
             onRender: (item: ISpGroup) => {
                 return (
-                    <SpUserPersona user = {item.Owner} />
+                    <EditableSpPersona user = {item.Owner} svc = {this.props.usersSvc} onChanged={(u) => {return this._ownerChanged(item,u)}} />
                 )
             },
             isResizable: true,
@@ -63,14 +79,24 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             name: "Members",
             onRender: (item: ISpGroup) => {
                 return (
-                    <a href='#' onClick = {()=>{
-                        this.setState({
-                            openGroup: item,
-                            isGroupEditPanelOpen: true
-                        })
-                    }}>
-                        Edit users
-                    </a>
+                    <div>
+                        <a href='#' className={styles.editUsersLink} onClick = {()=>{
+
+                            this.setState({
+                                openGroup: item
+                            });
+
+                            this.props.groupsSvc.GetUsersFromGroup(item.Id).then(users => {
+                                item.Users = users;
+                                this.setState({
+                                    isGroupEditPanelOpen: true
+                                })
+                            })
+                        }}>
+                            Edit users
+                        </a>
+                        {(this.state.openGroup && this.state.openGroup.Id == item.Id) && <Spinner />}
+                    </div>
                 )
             },
         }
@@ -90,7 +116,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                         onAbbrText= "Only group members can view other members"
                         defaultValue = {item.OnlyAllowMembersViewMembership}
                         onChanged = {(checked) => {
-                            this.props.updateGroup(item.Id, {OnlyAllowMembersViewMembership : checked}).catch(() =>{
+                            this.props.groupsSvc.UpdateGroup(item.Id, {OnlyAllowMembersViewMembership : checked}).catch(() =>{
                                 Dialog.alert(`There was an error while updating the "View members right" property of the "${item.Title}" group.`)
                             })
                         }}
@@ -109,9 +135,9 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                     <AbbrToggle
                         offAbbrText="Only group owner can edit members"
                         onAbbrText="Members can edit other group members"
-                        defaultValue={item.OnlyAllowMembersViewMembership}
+                        defaultValue={item.AllowMembersEditMembership}
                         onChanged={(checked) => {
-                            this.props.updateGroup(item.Id, { AllowMembersEditMembership: checked }).catch(() => {
+                            this.props.groupsSvc.UpdateGroup(item.Id, { AllowMembersEditMembership: checked }).catch(() => {
                                 Dialog.alert(`There was an error while updating the "Allow Members Edit Membership" property of the "${item.Title}" group.`)
                             })
                         }}
@@ -125,6 +151,11 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             key: "RequestToJoinLeaveEmailSetting",
             name: "Requests email",
             isResizable: true,
+            onRender: (item: ISpGroup) => {
+                return (
+                    <EditableTextField value={item.RequestToJoinLeaveEmailSetting} onChanged={(t) => { return this._requestEmailChanged(item, t) }} />
+                )
+            }
         }
     ]
 
@@ -137,23 +168,69 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
     }
 
     public render(): React.ReactElement<IGroupsListProps> {
-        let openGroup = this.state.openGroup;
         return (
             <div className={styles.groupsList}>
                 <DetailsList
                     items={this.props.groups}
+                    selectionMode = {SelectionMode.none}
                     columns = {this.props.extendedView ? [...this._basicColumns,...this._extendedColumns] : this._basicColumns}
                 />
                 <UsersPanel 
-                    groupTitle = {openGroup == null ? "Undefined" : openGroup.Title}
+                    group  = {this.state.openGroup}
                     isOpen={this.state.isGroupEditPanelOpen}
-                    users = {openGroup == null ? [] : openGroup.Users}
-                    spHttpClient = {this.props.spHttpClient}
-                    webAbsoluteUrl = {this.props.webAbsoluteUrl}
+                    usersSvc = {this.props.usersSvc}
+                    addUsersToGroup = {this.props.groupsSvc.AddGroupMembers}
+                    removeUsersFromGroup = {this.props.groupsSvc.RemoveGroupMembers}
+                    onClose = {() => {this.setState({
+                        openGroup: null,
+                        isGroupEditPanelOpen: false
+                    })}}
                 />
             </div>
         );
     }
 
+    @autobind
+    private async _ownerChanged(group: ISpGroup, owner: IUserSuggestion) {
+        try{
+            let newOwner = await this.props.usersSvc.EnsureUser(owner);
+            await this.props.groupsSvc.UpdateGroup(group.Id, {
+                Owner: newOwner
+            });
+        }
+        catch(e){
+            alert("err");
+        }
+    }
+
+    @autobind
+    private async _titleChanged(group: ISpGroup, title: string) {
+        try{
+            await this.props.groupsSvc.UpdateGroup(group.Id, { Title: title });
+        } catch(e){
+            Dialog.alert(`There was an error while updating the title of the "${group.Title}" group.`)
+            throw e
+        }
+    }
+
+    @autobind
+    private async _descriptionChanged(group: ISpGroup, title: string) {
+        try {
+            await this.props.groupsSvc.UpdateGroup(group.Id, { Description: title });
+        } catch (e) {
+            Dialog.alert(`There was an error while updating the description of the "${group.Title}" group.`)
+            throw e
+        }
+    }
+
+    @autobind
+    private async _requestEmailChanged(group: ISpGroup, title: string) {
+        try {
+            await this.props.groupsSvc.UpdateGroup(group.Id, { RequestToJoinLeaveEmailSetting: title });
+        } catch (e) {
+            Dialog.alert(`There was an error while updating the title of the "${group.Title}" group.`)
+            throw e
+        }
+    }
 
 }

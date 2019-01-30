@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
+import { update, get, } from '@microsoft/sp-lodash-subset';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
@@ -8,10 +9,15 @@ import {
   PropertyPaneDropdown
 } from '@microsoft/sp-webpart-base';
 
+import { IComboBoxOption } from 'office-ui-fabric-react/lib/components/ComboBox';
+import {PropertyPaneAsyncGroups} from "../../components/PropertyPaneAsyncGroups"
+
 import * as strings from 'SharePointGroupsAdminPanelWebPartStrings';
 import SharePointGroupsAdminPanel from './components/SharePointGroupsAdminPanel';
 import { ISharePointGroupsAdminPanelProps } from './components/ISharePointGroupsAdminPanelProps';
 import { PnPSpGroupSvc } from '../../services/spGroupSvc';
+import { UserProfileUserSvc } from '../../services/userProfileUserSvc';
+import { ITag } from 'office-ui-fabric-react/lib/Pickers';
 
 
 export enum spGroupAdminPanelViewType {
@@ -22,49 +28,24 @@ export enum spGroupAdminPanelViewType {
 
 export interface ISharePointGroupsAdminPanelWebPartProps {
   viewType: spGroupAdminPanelViewType
+  groups: number[]
 }
 
 export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWebPart<ISharePointGroupsAdminPanelWebPartProps> {
 
   public render(): void {
 
-    let webPartComponent: React.ReactElement<any>;
-    switch (this.properties.viewType) {
-      case spGroupAdminPanelViewType.Details: 
-        webPartComponent =  React.createElement(
-          SharePointGroupsAdminPanel,
-          {
-            groupsSvc: new PnPSpGroupSvc(this.context),
-            spHttpClient: this.context.spHttpClient,
-            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
-            extendedView: false
-          } as ISharePointGroupsAdminPanelProps
-        );
-        break;
-      case spGroupAdminPanelViewType.ExtendedList:
-        webPartComponent = React.createElement(
-          SharePointGroupsAdminPanel,
-          {
-            groupsSvc: new PnPSpGroupSvc(this.context),
-            spHttpClient: this.context.spHttpClient,
-            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
-            extendedView: true
-          } as ISharePointGroupsAdminPanelProps
-        );
-        break;
-      default: //SimpleList is taken care of in this branch
-        webPartComponent = React.createElement(
-          SharePointGroupsAdminPanel,
-          {
-            groupsSvc: new PnPSpGroupSvc(this.context),
-            spHttpClient: this.context.spHttpClient,
-            webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
-            extendedView: false
-          } as ISharePointGroupsAdminPanelProps
-        );
-        break;
-    }
-
+    const webPartComponent: React.ReactElement<ISharePointGroupsAdminPanelProps> = React.createElement(
+      SharePointGroupsAdminPanel,
+      {
+        groupsSvc: new PnPSpGroupSvc(this.context),
+        selectedGroups: this.properties.groups,
+        spHttpClient: this.context.spHttpClient,
+        webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
+        viewType : this.properties.viewType,
+        usersSvc: new UserProfileUserSvc(this.context)
+      } as ISharePointGroupsAdminPanelProps
+    );
     ReactDom.render(webPartComponent, this.domElement);
     
   }
@@ -75,6 +56,23 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
 
   protected get dataVersion(): Version {
     return Version.parse('1.0');
+  }
+
+  private async _getGroupsForPropertyPane(): Promise<ITag[]> {
+    let svc = new PnPSpGroupSvc(this.context);
+    let options = (await svc.GetGroupsForDropdown()).map<ITag>(g => {return {
+      key: g.Id.toString(),
+      name: g.Title
+    }});
+    return options;
+  }
+
+  private _onGroupsChange(propertyPath: string, newValue: any): void {
+    const oldValue: any = get(this.properties, propertyPath);
+    // store new value in web part properties
+    update(this.properties, propertyPath, (): any => { return newValue; });
+    // refresh web part
+    this.render();
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -100,11 +98,18 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
                       key: spGroupAdminPanelViewType.ExtendedList,
                       text: "Extended list"
                     },
-                    {
-                      key: spGroupAdminPanelViewType.Details,
-                      text: "Details"
-                    }
+                    // {
+                    //   key: spGroupAdminPanelViewType.Details,
+                    //   text: "Details"
+                    // }
+                    //might be added at some point
                   ]
+                }),
+                new PropertyPaneAsyncGroups('groups',{
+                  label: "Selected Groups",
+                  loadOptions: this._getGroupsForPropertyPane.bind(this),
+                  onPropertyChange: this._onGroupsChange.bind(this),
+                  selectedKey: this.properties.groups || []
                 })
               ]
             }
