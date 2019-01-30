@@ -73,20 +73,26 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
 
     async AddGroupMembers(groupId: number, users: IUserSuggestion[]) {
 
-        let batch = sp.createBatch();
-        let ensuredUsersBatch = sp.createBatch();
-        let ensuredUsersPromises = users.map(u => sp.web.inBatch(ensuredUsersBatch).ensureUser(u.Email));
-        await ensuredUsersBatch.execute();
+        if(users.length == 0){
+            return Promise.resolve<void>();
+        }
+        // let batch = sp.createBatch();
+        // let ensuredUsersBatch = sp.createBatch();
+        // batching temporarily remvoed due to execution issues
+        let ensuredUsersPromises = users.map(u => sp.web.ensureUser(u.Email));
         let ensuredUsers = await Promise.all(ensuredUsersPromises);
 
-        ensuredUsers.forEach(u => { sp.web.siteGroups.getById(groupId).users.inBatch(batch).add(u.data.LoginName)})
-        return batch.execute(); 
+        ensuredUsers.forEach(u => { sp.web.siteGroups.getById(groupId).users.add(u.data.LoginName)})
+        return Promise.all(ensuredUsers) as Promise<any>;
      }
 
     async RemoveGroupMembers(groupId: number, usersToRemove: ISpUser[]){
+        if (usersToRemove.length == 0) {
+            return Promise.resolve<void>();
+        }
         let batch = sp.createBatch();
-        usersToRemove.forEach(u => { sp.web.siteGroups.getById(groupId).users.inBatch(batch).removeById(u.Id) })
-        return batch.execute(); 
+        let removePromises = usersToRemove.map(u => { return sp.web.siteGroups.getById(groupId).users.inBatch(batch).removeById(u.Id) })
+        return Promise.all(removePromises); 
     }
 
     async GetGroupsForDropdown() {

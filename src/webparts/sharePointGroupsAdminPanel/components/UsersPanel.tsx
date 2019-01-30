@@ -77,17 +77,17 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
 
                 {this.state.usersToAdd.length > 0 && <h4 className = {styles.userToBeAddedText}>Following users will be added</h4>}
                 {this.state.usersToAdd.map(u => {
-                    return <SpUserPersona user={u} onDelete = {this._removeUserToAdd} />
+                    return <SpUserPersona user={u} key={u.Email} onDelete = {this._removeUserToAdd} />
                 })}
 
                 <h4>Following users will remain in group</h4>
-                {this.state.originalUsers.map(u => {
-                    return <SpUserPersona user={u} onDelete = {this._removeOriginalUser}/>
+                {this.state.originalUsers && this.state.originalUsers.map(u => { //I don't like this check, original users should never be undefined, something's not right in the props passed
+                    return <SpUserPersona key = {u.Email} user={u} onDelete = {this._removeOriginalUser}/>
                 })}
 
                 {this.state.usersToRemove.length > 0 && <h4 className={styles.userToBeRemovedText}>Following users will be removed</h4>}
                 {this.state.usersToRemove.map(u => {
-                    return <SpUserPersona user={u} onDelete={this._removeUserToRemove} />
+                    return <SpUserPersona key={u.Email} user={u} onDelete={this._removeUserToRemove} />
                 })}
                 
                 <DefaultButton 

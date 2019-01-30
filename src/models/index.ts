@@ -3,11 +3,11 @@ import { Draft } from "../utils/draft"
 export interface ISpGroupSvc {
     GetGroups: (ids?: number[]) => Promise<Array<ISpGroup>>
     GetUsersFromGroup: (groupId: number) => Promise<Array<ISpUser>>
-    UpdateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<void>
-    AddGroupMembers: (groupId: number, users: Array<IUserSuggestion>) => Promise<void>
-    RemoveGroupMembers: (groupId: number, usersToRemove: Array<ISpUser>) => Promise<void>
+    UpdateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<any>
+    AddGroupMembers: (groupId: number, users: Array<IUserSuggestion>) => Promise<any>
+    RemoveGroupMembers: (groupId: number, usersToRemove: Array<ISpUser>) => Promise<any>
     AddGroup: (group: ISpGroup) => Promise<ISpGroup>
-    DeleteGroup: (groupId: number) => Promise<void>
+    DeleteGroup: (groupId: number) => Promise<any>
     GetGroupsForDropdown:() => Promise<{Id: number, Title: string}[]>
 }
 
