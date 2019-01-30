@@ -91,7 +91,7 @@ export class PnPSpGroupSvc implements ISpGroupSvc {
             return Promise.resolve<void>();
         }
         let batch = sp.createBatch();
-        let removePromises = usersToRemove.map(u => { return sp.web.siteGroups.getById(groupId).users.inBatch(batch).removeById(u.Id) })
+        let removePromises = usersToRemove.map(u => { return sp.web.siteGroups.getById(groupId).users.removeById(u.Id) })
         return Promise.all(removePromises); 
     }
 
