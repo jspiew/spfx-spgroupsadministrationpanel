@@ -46,11 +46,12 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
         return (
             <div className={styles.editableTextField} onClick={this.state.isEditMode ? () => { } : this._onFieldClick }>
                 <div className={styles.text}>
+                    <div className={styles.editIcon}>
+                        <i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
+                    </div>
                     {this.state.text}
                 </div>
-                <div className={styles.editIcon}>
-                    <i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
-                </div>
+                
             </div>
         )
     }
@@ -70,16 +71,18 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
 
     @autobind
     private async onBlur(){
-        try{
-            await this.props.onChanged(this.state.text);
-            this.setState({
-                isEditMode: false
-            })
-        } catch(e) {
-            this.setState({
-                isEditMode: false,
-                text: this.props.value //if update failed, revert to initial value 
-            })
+        if (this.props.value !== this.state.text){
+            try{
+                await this.props.onChanged(this.state.text);
+                this.setState({
+                    isEditMode: false
+                })
+            } catch(e) {
+                this.setState({
+                    isEditMode: false,
+                    text: this.props.value //if update failed, revert to initial value 
+                })
+            }
         }
     }
 

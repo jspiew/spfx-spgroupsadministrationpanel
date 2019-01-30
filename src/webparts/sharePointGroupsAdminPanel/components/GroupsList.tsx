@@ -79,7 +79,7 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             onRender: (item: ISpGroup) => {
                 return (
                     <div>
-                        <a href='#' onClick = {()=>{
+                        <a href='#' className={styles.editUsersLink} onClick = {()=>{
 
                             this.setState({
                                 openGroup: item

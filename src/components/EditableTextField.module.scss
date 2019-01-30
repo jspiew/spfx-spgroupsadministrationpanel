@@ -7,22 +7,26 @@
         transition: 100ms;
         cursor: pointer;
 
-        .editIcon{
+        .text{
+            text-decoration: underline;
+            color: "[theme: themePrimary, default: #EA35A0]";
+
+            .editIcon{
             transition: 100ms;
             display:initial;
             float:left;
             color: "[theme: themePrimary, default: #EA35A0]";
         }
-
-        .text{
-            text-decoration: underline
         }
     }
-    .editIcon {
-        display: none;
-    }
+    
 
     .text{
         float:left;
+        margin: 10px 0;
+
+        .editIcon {
+            display: none;
+        }
     }
 }
