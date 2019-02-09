@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './SharePointGroupsAdminPanel.module.scss';
 import { ISharePointGroupsAdminPanelProps } from './ISharePointGroupsAdminPanelProps';
 import { escape } from '@microsoft/sp-lodash-subset';
-import GroupList from "./GroupsList"
+import GroupList from "./GroupsList";
 import {
   DetailsList,
   DetailsListLayoutMode,
@@ -13,12 +13,12 @@ import {
 import { ISpGroup, ISpUser } from '../../../models';
 import { autobind } from '@uifabric/utilities/lib';
 import { spGroupAdminPanelViewType } from '../SharePointGroupsAdminPanelWebPart';
-import {Spinner} from "office-ui-fabric-react/lib/Spinner"
-import GroupsDetailsView from "./GroupsDetailsView"
+import {Spinner} from "office-ui-fabric-react/lib/Spinner";
+import GroupsDetailsView from "./GroupsDetailsView";
 
 export interface ISharePointGroupsAdminPanelState {
-  groups: Array<ISpGroup>
-  areGroupsLoading: boolean
+  groups: Array<ISpGroup>;
+  areGroupsLoading: boolean;
 }
 
 export default class SharePointGroupsAdminPanel extends React.Component<ISharePointGroupsAdminPanelProps, ISharePointGroupsAdminPanelState> {
@@ -26,11 +26,11 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
 
   
   constructor(props){
-    super(props)
+    super(props);
     this.state = {
       groups: [],
       areGroupsLoading: false
-    }
+    };
   }
 
   public componentDidMount() {
@@ -51,7 +51,7 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
           spHttpClient={this.props.spHttpClient}
           webAbsoluteUrl={this.props.webAbsoluteUrl}
           updateGroup={this.props.groupsSvc.UpdateGroup}
-        />
+        />;
         break;
       case spGroupAdminPanelViewType.ExtendedList:
         groupDisplay = <GroupList
@@ -59,7 +59,7 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
           groupsSvc = {this.props.groupsSvc}
           extendedView={true}
           usersSvc = {this.props.usersSvc}
-        />
+        />;
         break;
       default:
         groupDisplay = <GroupList
@@ -67,7 +67,7 @@ export default class SharePointGroupsAdminPanel extends React.Component<ISharePo
           groupsSvc={this.props.groupsSvc}
           extendedView={false}
           usersSvc={this.props.usersSvc}
-        />
+        />;
         break;
     }
 

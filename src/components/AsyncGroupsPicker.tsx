@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { TagPicker, ITag } from 'office-ui-fabric-react/lib/components/pickers/TagPicker/TagPicker';
 import { Spinner } from 'office-ui-fabric-react/lib/components/Spinner';
-import { sortBy } from '@microsoft/sp-lodash-subset'
+import { sortBy } from '@microsoft/sp-lodash-subset';
 import { autobind } from '@uifabric/utilities/lib';
-import styles from "./AsyncGroupsPicker.module.scss"
+import styles from "./AsyncGroupsPicker.module.scss";
 
 
 export interface IAsyncGroupsPickerState {
@@ -82,11 +82,11 @@ public render(): JSX.Element {
             <div className={styles.groupsPicker}>
                 <TagPicker 
                     itemLimit = {20}
-                    onEmptyInputFocus = {(selected) => {return this.state.options.filter(o => selected.indexOf(o) < 0)}}
+                    onEmptyInputFocus = {(selected) => {return this.state.options.filter(o => selected.indexOf(o) < 0);}}
                     selectedItems = {this.state.selectedOptions}
                     onResolveSuggestions = {(filter,selectedItems) => {
                         if (!filter) return this.state.options.filter(o => selectedItems.indexOf(o) < 0);
-                        return this.state.options.filter(o => o.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0 && selectedItems.indexOf(o) < 0)
+                        return this.state.options.filter(o => o.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0 && selectedItems.indexOf(o) < 0);
                     }}
                     onChange = {this.onChanged.bind(this)}
                 />
@@ -103,7 +103,7 @@ public render(): JSX.Element {
 
     @autobind
     private _selectAll(){
-        this.onChanged([...this.state.options])
+        this.onChanged([...this.state.options]);
     }
 
     @autobind

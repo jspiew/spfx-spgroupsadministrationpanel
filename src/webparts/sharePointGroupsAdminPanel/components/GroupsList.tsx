@@ -4,30 +4,30 @@ import {
     DetailsList,
     SelectionMode,
     IColumn} from 'office-ui-fabric-react/lib/DetailsList';
-import { ISpGroup, IUsersSvc, ISpGroupSvc, IUserSuggestion } from '../../../models';
-import {SpUserPersona, SpUsersFacepile} from "../../../components/small/userDisplays"
-import UsersPanel from "./UsersPanel"
+import { ISpGroup, IUsersSvc, ISpGroupSvc, IUserSuggestion, ISpUser, isISpUser } from '../../../models';
+import {SpUserPersona, SpUsersFacepile} from "../../../components/small/userDisplays";
+import UsersPanel from "./UsersPanel";
 import { SPHttpClient } from '@microsoft/sp-http';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
-import { AbbrToggle } from "../../../components/small/abbrToggle"
+import { AbbrToggle } from "../../../components/small/abbrToggle";
 import { Draft } from '../../../utils/draft';
 import { Dialog } from '@microsoft/sp-dialog/lib/index';
 import { Spinner } from 'office-ui-fabric-react/lib/Spinner';
-import EditableSpPersona from "../../../components/EditableSpPersona"
-import EditableTextField from "../../../components/EditableTextField"
+import EditableSpPersona from "../../../components/EditableSpPersona";
+import EditableTextField from "../../../components/EditableTextField";
 import { autobind } from '@uifabric/utilities/lib';
 import { Item } from '@pnp/sp';
 
 export interface IGroupsListState {
-    openGroup: ISpGroup,
-    isGroupEditPanelOpen: boolean   
+    openGroup: ISpGroup;
+    isGroupEditPanelOpen: boolean;   
 }
 
 export interface IGroupsListProps {
-    extendedView? : boolean,
-    groups: Array<ISpGroup>,
-    usersSvc: IUsersSvc,
-    groupsSvc: ISpGroupSvc
+    extendedView? : boolean;
+    groups: Array<ISpGroup>;
+    usersSvc: IUsersSvc;
+    groupsSvc: ISpGroupSvc;
 }
 
 export default class GroupsList extends React.Component<IGroupsListProps, IGroupsListState> {
@@ -42,8 +42,8 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             isResizable: true,        
             onRender: (item: ISpGroup) => {
                 return (
-                    <EditableTextField value={item.Title} onChanged={(t) => { return this._titleChanged(item, t)}} />
-                )
+                    <EditableTextField value={item.Title} onChanged={(t) => { return this._titleChanged(item, t);}} />
+                );
             }
         },
         {
@@ -55,8 +55,8 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             isResizable: true,
             onRender: (item: ISpGroup) => {
                 return (
-                    <EditableTextField value={item.Description} onChanged={(t) => { return this._descriptionChanged(item, t) }} />
-                )
+                    <EditableTextField value={item.Description} onChanged={(t) => { return this._descriptionChanged(item, t); }} />
+                );
             }
         },
         {
@@ -66,8 +66,8 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             name: "Owner",
             onRender: (item: ISpGroup) => {
                 return (
-                    <EditableSpPersona user = {item.Owner} svc = {this.props.usersSvc} onChanged={(u) => {return this._ownerChanged(item,u)}} />
-                )
+                    <EditableSpPersona user = {item.Owner} includeGroups = {true} svc = {this.props.usersSvc} onChanged={(u) => {return this._ownerChanged(item,u);}} />
+                );
             },
             isResizable: true,
         },
@@ -90,17 +90,17 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                                 item.Users = users;
                                 this.setState({
                                     isGroupEditPanelOpen: true
-                                })
-                            })
+                                });
+                            });
                         }}>
                             Edit users
                         </a>
                         {(this.state.openGroup && this.state.openGroup.Id == item.Id) && <Spinner />}
                     </div>
-                )
+                );
             },
         }
-    ]
+    ];
 
     private readonly _extendedColumns = [
         {
@@ -117,11 +117,11 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                         defaultValue = {item.OnlyAllowMembersViewMembership}
                         onChanged = {(checked) => {
                             this.props.groupsSvc.UpdateGroup(item.Id, {OnlyAllowMembersViewMembership : checked}).catch(() =>{
-                                Dialog.alert(`There was an error while updating the "View members right" property of the "${item.Title}" group.`)
-                            })
+                                Dialog.alert(`There was an error while updating the "View members right" property of the "${item.Title}" group.`);
+                            });
                         }}
                     />
-                )
+                );
             }
         },
         {
@@ -138,11 +138,11 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                         defaultValue={item.AllowMembersEditMembership}
                         onChanged={(checked) => {
                             this.props.groupsSvc.UpdateGroup(item.Id, { AllowMembersEditMembership: checked }).catch(() => {
-                                Dialog.alert(`There was an error while updating the "Allow Members Edit Membership" property of the "${item.Title}" group.`)
-                            })
+                                Dialog.alert(`There was an error while updating the "Allow Members Edit Membership" property of the "${item.Title}" group.`);
+                            });
                         }}
                     />
-                )
+                );
             }
         },
         {
@@ -153,18 +153,18 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             isResizable: true,
             onRender: (item: ISpGroup) => {
                 return (
-                    <EditableTextField value={item.RequestToJoinLeaveEmailSetting} onChanged={(t) => { return this._requestEmailChanged(item, t) }} />
-                )
+                    <EditableTextField value={item.RequestToJoinLeaveEmailSetting} onChanged={(t) => { return this._requestEmailChanged(item, t); }} />
+                );
             }
         }
-    ]
+    ];
 
     constructor(props: IGroupsListProps) {
-        super(props)
+        super(props);
         this.state = {
             openGroup: null,
             isGroupEditPanelOpen: false
-        }
+        };
     }
 
     public render(): React.ReactElement<IGroupsListProps> {
@@ -184,16 +184,16 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
                     onClose = {() => {this.setState({
                         openGroup: null,
                         isGroupEditPanelOpen: false
-                    })}}
+                    });}}
                 />
             </div>
         );
     }
 
     @autobind
-    private async _ownerChanged(group: ISpGroup, owner: IUserSuggestion) {
+    private async _ownerChanged(group: ISpGroup, owner: IUserSuggestion|ISpUser) {
         try{
-            let newOwner = await this.props.usersSvc.EnsureUser(owner);
+            let newOwner = isISpUser(owner) ? owner : await this.props.usersSvc.EnsureUser(owner);
             await this.props.groupsSvc.UpdateGroup(group.Id, {
                 Owner: newOwner
             });
@@ -208,8 +208,8 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         try{
             await this.props.groupsSvc.UpdateGroup(group.Id, { Title: title });
         } catch(e){
-            Dialog.alert(`There was an error while updating the title of the "${group.Title}" group.`)
-            throw e
+            Dialog.alert(`There was an error while updating the title of the "${group.Title}" group.`);
+            throw e;
         }
     }
 
@@ -218,8 +218,8 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         try {
             await this.props.groupsSvc.UpdateGroup(group.Id, { Description: title });
         } catch (e) {
-            Dialog.alert(`There was an error while updating the description of the "${group.Title}" group.`)
-            throw e
+            Dialog.alert(`There was an error while updating the description of the "${group.Title}" group.`);
+            throw e;
         }
     }
 
@@ -228,8 +228,8 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
         try {
             await this.props.groupsSvc.UpdateGroup(group.Id, { RequestToJoinLeaveEmailSetting: title });
         } catch (e) {
-            Dialog.alert(`There was an error while updating the title of the "${group.Title}" group.`)
-            throw e
+            Dialog.alert(`There was an error while updating the title of the "${group.Title}" group.`);
+            throw e;
         }
     }
 

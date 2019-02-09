@@ -1,19 +1,19 @@
-import { IUserSuggestion, IUsersSvc, ISpUser } from "../models/index"
+import { IUserSuggestion, IUsersSvc, ISpUser } from "../models/index";
 import * as React from 'react';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
-import {TextField} from "office-ui-fabric-react/lib/TextField"
+import {TextField} from "office-ui-fabric-react/lib/TextField";
 import { autobind } from '@uifabric/utilities/lib';
-import {SpUserPersona} from "./small/userDisplays"
-import styles from "./EditableTextField.module.scss"
-import PeoplePicker from "./PeoplePicker"
+import {SpUserPersona} from "./small/userDisplays";
+import styles from "./EditableTextField.module.scss";
+import PeoplePicker from "./PeoplePicker";
 export interface IEditableTextFieldState {
     isEditMode: boolean;
-    text: string
+    text: string;
 }
 
 export interface IEditableTextFieldProps {
-    onChanged: (newValue: string) => Promise<any>
-    value: string
+    onChanged: (newValue: string) => Promise<any>;
+    value: string;
 }
 
 export default class EditableTextField extends React.Component<IEditableTextFieldProps, IEditableTextFieldState> {
@@ -53,7 +53,7 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
                 </div>
                 
             </div>
-        )
+        );
     }
 
     private _renderEdit(){
@@ -62,11 +62,11 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
                 defaultValue = {this.state.text}
                 onChanged={(newVal: string) => { this.setState({
                     text: newVal
-                })}}
+                });}}
                 autoFocus= {true}
                 selected = {true}
                 onBlur={this.onBlur}
-            />)
+            />);
     }
 
     @autobind
@@ -76,12 +76,12 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
                 await this.props.onChanged(this.state.text);
                 this.setState({
                     isEditMode: false
-                })
+                });
             } catch(e) {
                 this.setState({
                     isEditMode: false,
                     text: this.props.value //if update failed, revert to initial value 
-                })
+                });
             }
         }
     }
@@ -90,6 +90,6 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
     private _onFieldClick(){
         this.setState({
             isEditMode : true
-        })
+        });
     }
 }

@@ -5,11 +5,11 @@ import {
     IColumn
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { ISpGroup, ISpUser } from '../../../models';
-import { SpUserPersona, SpUsersFacepile } from "../../../components/small/userDisplays"
-import UsersPanel from "./UsersPanel"
+import { SpUserPersona, SpUsersFacepile } from "../../../components/small/userDisplays";
+import UsersPanel from "./UsersPanel";
 import { SPHttpClient } from '@microsoft/sp-http';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
-import { AbbrToggle } from "../../../components/small/abbrToggle"
+import { AbbrToggle } from "../../../components/small/abbrToggle";
 import { Draft } from '../../../utils/draft';
 import { css, autobind } from '@uifabric/utilities/lib';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
@@ -21,10 +21,10 @@ export interface IGroupsDetailsViewState {
 }
 
 export interface IGroupsDetailsViewProps {
-    groups: Array<ISpGroup>,
-    spHttpClient: SPHttpClient,
-    webAbsoluteUrl: string,
-    updateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<any>
+    groups: Array<ISpGroup>;
+    spHttpClient: SPHttpClient;
+    webAbsoluteUrl: string;
+    updateGroup: (groupId: number, changes: Draft<ISpGroup>) => Promise<any>;
 }
 
 export default class GroupsDetailsView extends React.Component<IGroupsDetailsViewProps, IGroupsDetailsViewState> {
@@ -33,7 +33,7 @@ export default class GroupsDetailsView extends React.Component<IGroupsDetailsVie
         this.state = {
             selectedGroup : null,
             usersToAdd : []
-        }
+        };
     }
 
     private get hidePeoplePickerDialog() {
@@ -52,12 +52,12 @@ export default class GroupsDetailsView extends React.Component<IGroupsDetailsVie
                                         <h4 className={styles.groupTitle}>{g.Title}</h4>  
                                         <i 
                                             className={css("ms-Icon", "ms-Icon--PeopleAdd", styles.peopleAddIcon)} 
-                                            onClick={() => {this._addPeopleIconClicked(g)}}
+                                            onClick={() => {this._addPeopleIconClicked(g);}}
                                             aria-hidden="true"></i>
                                     </div>
                                     {g.Users.map(u => <SpUserPersona user={u}/>)}
                                 </div>
-                            )
+                            );
                         })}
                     </div>
                 </div>
@@ -85,21 +85,21 @@ export default class GroupsDetailsView extends React.Component<IGroupsDetailsVie
                     {this.state.usersToAdd.map(u => <SpUserPersona user={u} />)}
                 </Dialog>
             </div>
-        )
+        );
     }
 
     @autobind
     private _closeDialog(){
         this.setState({
             selectedGroup: null
-        })
+        });
     }
 
     @autobind
     private _addPeopleIconClicked(group:ISpGroup) {
         this.setState({
             selectedGroup: group
-        })
+        });
     }
 
     @autobind
@@ -109,8 +109,8 @@ export default class GroupsDetailsView extends React.Component<IGroupsDetailsVie
                 Email: u.secondaryText,
                 Title: u.text,
                 Id: u.id
-            }})
-        })
+            };})
+        });
         console.log(JSON.stringify(items));
     }
 }

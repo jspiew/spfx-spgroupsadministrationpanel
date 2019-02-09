@@ -6,7 +6,7 @@ import {
     NormalPeoplePicker,
     ValidationState
 } from 'office-ui-fabric-react/lib/Pickers';
-import { IUserSuggestion, IUsersSvc } from "../models/index"
+import { IUserSuggestion, IUsersSvc } from "../models/index";
 import * as React from 'react';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
 import { autobind } from '@uifabric/utilities/lib';
@@ -17,9 +17,10 @@ export interface IPeoplePickerState {
 }
 
 export interface IPeoplePickerProps {
-    svc: IUsersSvc
-    onChanged: (selectedUsers: Array<IUserSuggestion>) => void
-    disabled?: boolean
+    svc: IUsersSvc;
+    includeGroups: boolean;
+    onChanged: (selectedUsers: Array<IUserSuggestion>) => void;
+    disabled?: boolean;
 }
 
 export default class PeoplePicker extends React.Component<IPeoplePickerProps, IPeoplePickerState> {
@@ -53,9 +54,9 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
                 onInputChange={this._onInputChange}
                 onChange = {(items) => {
                     this._onItemsChange(items); 
-                    this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text}})); this._onRemoveSuggestion(items[0])}}
+                    this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text};})); this._onRemoveSuggestion(items[0]);}}
             />
-        )
+        );
     }
 
     @autobind
@@ -63,7 +64,7 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
         this.setState({
             currentSelectedItems: items
         });
-    };
+    }
 
     @autobind
     private _onRemoveSuggestion (item: IPersonaProps) {
@@ -84,7 +85,7 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
                 .concat(mruState.slice(indexMostRecentlyUsed + 1));
             this.setState({ mostRecentlyUsed: newSuggestedPeople });
         }
-    };
+    }
     
     @autobind
     private async _onFilterChanged(
@@ -93,13 +94,13 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
         limitResults?: number
     ) {
         if (filterText) {
-            let filteredPersonas: IPersonaProps[] = (await this.props.svc.GetUsersSuggestions(filterText)).map<IPersonaProps>(s => {
+            let filteredPersonas: IPersonaProps[] = (await this.props.svc.GetUsersSuggestions(filterText, this.props.includeGroups)).map<IPersonaProps>(s => {
                 return {
                     text: s.Title,
                     secondaryText: s.Email,
                     imageUrl: `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${s.Email}&UA=0&size=HR64x64`
-                }
-            })
+                };
+            });
 
             filteredPersonas = this._removeDuplicates(filteredPersonas, currentPersonas);
             filteredPersonas = limitResults ? filteredPersonas.splice(0, limitResults) : filteredPersonas;
@@ -107,14 +108,14 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
         } else {
             return [];
         }
-    };
+    }
     
     @autobind
     private _returnMostRecentlyUsed(currentPersonas: IPersonaProps[]) {
         let { mostRecentlyUsed } = this.state;
         mostRecentlyUsed = this._removeDuplicates(mostRecentlyUsed, currentPersonas);
         return this._filterPromise(mostRecentlyUsed);
-    };
+    }
 
 
     private _filterPromise(personasToReturn: IPersonaProps[]): IPersonaProps[] | Promise<IPersonaProps[]> {
@@ -142,7 +143,7 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
         } else {
             return ValidationState.invalid;
         }
-    };
+    }
 
     /**
      * Takes in the picker input and modifies it in whichever way

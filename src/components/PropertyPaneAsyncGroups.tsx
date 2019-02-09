@@ -6,7 +6,7 @@ import {
 } from '@microsoft/sp-webpart-base';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/components/ComboBox';
 import AsyncGroupsPicker, { IAsyncGroupsPickerProps, IAsyncGroupsPickerState } from './AsyncGroupsPicker';
-import { IPropertyPaneCustomFieldProps } from '@microsoft/sp-webpart-base'
+import { IPropertyPaneCustomFieldProps } from '@microsoft/sp-webpart-base';
 import { ITag } from 'office-ui-fabric-react/lib/Pickers';
 
 export interface IPropertyPaneAsyncGroupsProps {

@@ -10,13 +10,13 @@ import {
 } from '@microsoft/sp-webpart-base';
 
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/components/ComboBox';
-import {PropertyPaneAsyncGroups} from "../../components/PropertyPaneAsyncGroups"
+import {PropertyPaneAsyncGroups} from "../../components/PropertyPaneAsyncGroups";
 
 import * as strings from 'SharePointGroupsAdminPanelWebPartStrings';
 import SharePointGroupsAdminPanel from './components/SharePointGroupsAdminPanel';
 import { ISharePointGroupsAdminPanelProps } from './components/ISharePointGroupsAdminPanelProps';
 import { PnPSpGroupSvc } from '../../services/spGroupSvc';
-import { UserProfileUserSvc } from '../../services/userProfileUserSvc';
+import { SpUserSvc } from '../../services/spUsrSvc';
 import { ITag } from 'office-ui-fabric-react/lib/Pickers';
 
 
@@ -27,8 +27,8 @@ export enum spGroupAdminPanelViewType {
 }
 
 export interface ISharePointGroupsAdminPanelWebPartProps {
-  viewType: spGroupAdminPanelViewType
-  groups: number[]
+  viewType: spGroupAdminPanelViewType;
+  groups: number[];
 }
 
 export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWebPart<ISharePointGroupsAdminPanelWebPartProps> {
@@ -43,7 +43,7 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
         spHttpClient: this.context.spHttpClient,
         webAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
         viewType : this.properties.viewType,
-        usersSvc: new UserProfileUserSvc(this.context)
+        usersSvc: new SpUserSvc(this.context)
       } as ISharePointGroupsAdminPanelProps
     );
     ReactDom.render(webPartComponent, this.domElement);
@@ -63,7 +63,7 @@ export default class SharePointGroupsAdminPanelWebPart extends BaseClientSideWeb
     let options = (await svc.GetGroupsForDropdown()).map<ITag>(g => {return {
       key: g.Id.toString(),
       name: g.Title
-    }});
+    };});
     return options;
   }
 
