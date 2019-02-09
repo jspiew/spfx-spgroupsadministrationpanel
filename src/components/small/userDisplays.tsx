@@ -8,7 +8,7 @@ import { UserCustomAction } from "@pnp/sp/src/usercustomactions";
 
 
 function _getTHumbnailUrl(email:string){
-    return `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${email}&UA=0&size=HR64x64`;
+    return email?`https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${email}&UA=0&size=HR64x64`: undefined;
 }
 
 export function SpUserPersona(props: { user: IUserSuggestion, onDelete?: (user:IUserSuggestion) => void, personaProps?: IPersonaProps}){

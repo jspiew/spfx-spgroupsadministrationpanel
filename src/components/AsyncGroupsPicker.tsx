@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TagPicker, ITag } from 'office-ui-fabric-react/lib/components/pickers/TagPicker/TagPicker';
 import { Spinner } from 'office-ui-fabric-react/lib/components/Spinner';
+import {Label} from "office-ui-fabric-react/lib/components/label"
 import { sortBy } from '@microsoft/sp-lodash-subset';
 import { autobind } from '@uifabric/utilities/lib';
 import styles from "./AsyncGroupsPicker.module.scss";
@@ -80,6 +81,9 @@ public render(): JSX.Element {
 
         return (
             <div className={styles.groupsPicker}>
+                <Label>
+                    {this.props.label}
+                </Label>
                 <TagPicker 
                     itemLimit = {20}
                     onEmptyInputFocus = {(selected) => {return this.state.options.filter(o => selected.indexOf(o) < 0);}}

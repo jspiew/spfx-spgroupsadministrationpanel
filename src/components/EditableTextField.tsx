@@ -60,17 +60,19 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
         return (
             <TextField
                 defaultValue = {this.state.text}
+                inputClassName={styles.editableTextBox}
                 onChanged={(newVal: string) => { this.setState({
                     text: newVal
                 });}}
                 autoFocus= {true}
                 selected = {true}
-                onBlur={this.onBlur}
+                onKeyDown = {this._onKeyDown}
+                onBlur={this._onBlur}
             />);
     }
 
     @autobind
-    private async onBlur(){
+    private async _onBlur(){
         if (this.props.value !== this.state.text){
             try{
                 await this.props.onChanged(this.state.text);
@@ -83,6 +85,10 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
                     text: this.props.value //if update failed, revert to initial value 
                 });
             }
+        } else {
+            this.setState({
+                isEditMode: false
+            });
         }
     }
 
@@ -91,5 +97,18 @@ export default class EditableTextField extends React.Component<IEditableTextFiel
         this.setState({
             isEditMode : true
         });
+    }
+
+    @autobind
+    private _onKeyDown(event:React.KeyboardEvent<HTMLInputElement|HTMLTextAreaElement>){
+        switch(event.keyCode){
+            case 13: this._onBlur();break;
+            case 27: {
+                this.setState({
+                    isEditMode: false,
+                    text: this.props.value //if update failed, revert to initial value 
+                });
+            }
+        }
     }
 }
