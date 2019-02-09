@@ -19,7 +19,7 @@ export class SpUserSvc implements IUsersSvc {
         let profileResultsPromise = sp.profiles.clientPeoplePickerSearchUser({
             MaximumEntitySuggestions: 3,
             QueryString: searchText,
-            PrincipalType : PrincipalType.User & PrincipalType.SecurityGroup
+            PrincipalType: includeSiteGroups ? PrincipalType.User & PrincipalType.SecurityGroup & PrincipalType.SharePointGroup : PrincipalType.User & PrincipalType.SecurityGroup
         });
 
         let siteGroupResults =includeSiteGroups ? await this.searchGroups(searchText) : [];

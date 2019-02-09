@@ -6,7 +6,7 @@ import {
     NormalPeoplePicker,
     ValidationState
 } from 'office-ui-fabric-react/lib/Pickers';
-import { IUserSuggestion, IUsersSvc } from "../models/index";
+import { IUserSuggestion, IUsersSvc, ISpUser, isISpUser } from "../models/index";
 import * as React from 'react';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
 import { autobind } from '@uifabric/utilities/lib';
@@ -19,7 +19,7 @@ export interface IPeoplePickerState {
 export interface IPeoplePickerProps {
     svc: IUsersSvc;
     includeGroups: boolean;
-    onChanged: (selectedUsers: Array<IUserSuggestion>) => void;
+    onChanged: (selectedUsers: Array<IUserSuggestion| ISpUser>) => void;
     disabled?: boolean;
 }
 
@@ -54,7 +54,7 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
                 onInputChange={this._onInputChange}
                 onChange = {(items) => {
                     this._onItemsChange(items); 
-                    this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text};})); this._onRemoveSuggestion(items[0]);}}
+                    this.props.onChanged(items.map(i => {return {Email: i.secondaryText, Title: i.text, Id: i.tertiaryText? parseInt(i.tertiaryText) : undefined};})); this._onRemoveSuggestion(items[0]);}}
             />
         );
     }
@@ -98,7 +98,8 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
                 return {
                     text: s.Title,
                     secondaryText: s.Email,
-                    imageUrl: `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${s.Email}&UA=0&size=HR64x64`
+                    imageUrl: s.Email.indexOf("@") > 0 ? `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${s.Email}&UA=0&size=HR64x64` : undefined,
+                    tertiaryText: isISpUser(s) ? s.Id.toString() : undefined //very dirty workaround where I'm storing the ID of the group in the tertiary text. Should probably redesign the whole thing
                 };
             });
 
