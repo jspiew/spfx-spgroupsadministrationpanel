@@ -16,6 +16,10 @@
             color: "[theme: themePrimary, default: #EA35A0]";
         }
     }
+
+    &.disableHover{
+        pointer-events: none;
+    }
     .persona {
         float:left;
     }
