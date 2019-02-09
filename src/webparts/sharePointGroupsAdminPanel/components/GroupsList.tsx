@@ -42,7 +42,9 @@ export default class GroupsList extends React.Component<IGroupsListProps, IGroup
             isResizable: true,        
             onRender: (item: ISpGroup) => {
                 return (
-                    <EditableTextField value={item.Title} onChanged={(t) => { return this._titleChanged(item, t);}} />
+                    <abbr title={item.Title}>
+                        <EditableTextField value={item.Title} onChanged={(t) => { return this._titleChanged(item, t);}} />
+                    </abbr>
                 );
             }
         },

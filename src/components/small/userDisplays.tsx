@@ -27,10 +27,10 @@ export function SpUserPersona(props: { user: IUserSuggestion, onDelete?: (user:I
         sharedProps.size = sharedProps.size || PersonaSize.small;
         sharedProps.imageUrl = sharedProps.imageUrl || _getTHumbnailUrl(props.user.Email);
         sharedProps.onRenderSecondaryText = sharedProps.onRenderSecondaryText || (() => {
-            return <a onClick={_cancelEvent} href={`mailto:${props.user.Email}`} className={styles.secondaryTextColor}>
-                        {props.user.Email && <i className="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>}
-                        {props.user.Email || "No email address"}
-                    </a>;
+            return props.user.Email ? <a onClick={_cancelEvent} href={`mailto:${props.user.Email}`} className={styles.secondaryTextColor}>
+                        <i className="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>
+                        {props.user.Email}
+                    </a> : <span/>;
         });
         return (
             <div className = {styles.spUserPersona}>
