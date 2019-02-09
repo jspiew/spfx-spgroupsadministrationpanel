@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TagPicker, ITag } from 'office-ui-fabric-react/lib/components/pickers/TagPicker/TagPicker';
 import { Spinner } from 'office-ui-fabric-react/lib/components/Spinner';
-import {Label} from "office-ui-fabric-react/lib/components/label"
+import {Label} from "office-ui-fabric-react/lib/components/Label";
 import { sortBy } from '@microsoft/sp-lodash-subset';
 import { autobind } from '@uifabric/utilities/lib';
 import styles from "./AsyncGroupsPicker.module.scss";
