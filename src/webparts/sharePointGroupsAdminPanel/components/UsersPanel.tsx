@@ -82,7 +82,7 @@ export default class UsersPanel extends React.Component<IUsersPanelProps, IUsers
                 })}
 
                 <h4>Following users will remain in group</h4>
-                {this.state.originalUsers && this.state.originalUsers.map(u => { //I don't like this check, original users should never be undefined, something's not right in the props passed
+                {this.state.originalUsers && this.state.originalUsers.map(u => { //I don't like this check, original users should never be undefined, something's not right in the props passed, marking this as TODO aka not gonna get done anyway
                     return <SpUserPersona key = {u.Email} user={u} onDelete = {this._removeOriginalUser}/>;
                 })}
 
