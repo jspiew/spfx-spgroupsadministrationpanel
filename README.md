@@ -3,10 +3,12 @@
 ## Summary
 This webparts lets users manage SharePoint Groups in a modern environment.
 
-[picture of the web part in action]
+*[1][figure1]
+*[2][figure2]
+*[3][figure3]
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-GA-green.svg)
+![drop](https://img.shields.io/badge/drop-1.6-green.svg)
 
 ## Applies to 
 
@@ -53,3 +55,7 @@ Version|Date|Comments
 
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/readme-template" />
+
+[figure1]: ./assets/1.png
+[figure2]: ./assets/2.png
+[figure3]: ./assets/3.png
