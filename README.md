@@ -3,9 +3,9 @@
 ## Summary
 This webparts lets users manage SharePoint Groups in a modern environment.
 
-*[1][figure1]
-*[2][figure2]
-*[3][figure3]
+![1][figure1]
+![2][figure2]
+![3][figure3]
 
 ## Used SharePoint Framework Version 
 ![drop](https://img.shields.io/badge/drop-1.6-green.svg)
