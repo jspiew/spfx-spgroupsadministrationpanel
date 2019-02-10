@@ -54,7 +54,7 @@ Version|Date|Comments
 - people picker based on User Profile Service
 
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/readme-template" />
+<img src="https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/react-spgroupspanel" />
 
 [figure1]: ./assets/1.png
 [figure2]: ./assets/2.png

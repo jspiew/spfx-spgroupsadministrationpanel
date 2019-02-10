@@ -99,7 +99,7 @@ export default class PeoplePicker extends React.Component<IPeoplePickerProps, IP
                     text: s.Title,
                     secondaryText: s.Email,
                     imageUrl: s.Email.indexOf("@") > 0 ? `https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=${s.Email}&UA=0&size=HR64x64` : undefined,
-                    tertiaryText: isISpUser(s) ? s.Id.toString() : undefined //very dirty workaround where I'm storing the ID of the group in the tertiary text. Should probably redesign the whole thing
+                    tertiaryText: isISpUser(s) ? s.Id.toString() : undefined //very dirty workaround where I'm storing the ID of the group in the tertiary text. Should probably redesign the whole thing, there has to be a better way of doing it
                 };
             });
 
