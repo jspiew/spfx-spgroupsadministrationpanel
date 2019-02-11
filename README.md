@@ -1,7 +1,7 @@
 ## spfx-groupmanager
 
 ## Summary
-This webparts lets users manage SharePoint Groups in a modern environment.
+This webparts lets users manage SharePoint Groups in a modern environment. The use case this webpart was written to handle, is when business administrators of the site are supposed to manage only a couple of groups within the site. Instead of giving them link to the groups list (or creating a page with links to those groups), you can use that webpart to display to the user just the groups that they'd be interested in. Also, unlike standard group management in SharePoint, using this webpart does not force the use to leave the modern pages.
 
 ![1][figure1]
 ![2][figure2]
