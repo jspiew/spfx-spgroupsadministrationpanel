@@ -23,7 +23,7 @@ This webparts lets users manage SharePoint Groups in a modern environment.
 
 Solution|Author(s)
 --------|---------
-SPFX-SPGROUPSADMINISTRATIONPANEL | jspiew (jacek.spiewak@outlook.com)
+react-spgroupspanel| jspiew (jacek.spiewak@outlook.com)
 
 ## Version history
 
